@@ -14,30 +14,40 @@
         <div class="col-12">
             <div class="card">            
                 <div class="card-header d-flex justify-content-between">
-                    <a href="{{ url('items/add') }}" class="btn btn-primary">商品登録</a>
+                    <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" > 一括削除 </a>
                     <p class="flex-grow-1"></p>
-                    <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" data-url="{{ url('items/some_delete') }}" > 一括削除 </a>
+                    <a href="{{ url('items/add') }}" class="btn btn-primary">商品登録</a>    
                 </div>
                 <div class="card-body table-responsive p-0">
                     <table class="table table-hover text-nowrap">
                         <thead>
                             <tr>
+                                <th>
+                                    <div class="d-flex flex-row-reverse">
+                                        <input class="form-check-input" type="checkbox" id="all">
+                                        <label class="form-check-label mr-3" for="all">
+                                            選択
+                                        </label>
+                                    </div>
+                                </th>
                                 <th>ID</th>
                                 <th>名前</th>
                                 <th>種別</th>
                                 <th>詳細</th>
-                                <th>選択<input type="checkbox" name="all-check" id="all-check"></th>
+                                
+                                
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($items as $item)
                                 <tr>
+                                    <td class="text-center"><input type="checkbox" class="delete-check" name="delete-check[]" value="{{ $item->id }}"></td>
+                                
                                     <td>{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->type }}</td>
                                     <td>{{ $item->detail }}</td>
-                                    <td><input type="checkbox" class="delete-check" name="delete-check[]" data-title="{{ $item->name }}" value="{{ $item->id }}"></td>
-                                
+                                    
                                 </tr>
                             @endforeach
                         </tbody>
@@ -49,9 +59,10 @@
 @stop
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 @stop
 
 @section('js')
-<script src="{{ asset('js/modal.js') }}"></script>
+<script src="{{ asset('js/item.js') }}"></script>
 @stop
 
