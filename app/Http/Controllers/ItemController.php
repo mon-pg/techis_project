@@ -54,4 +54,30 @@ class ItemController extends Controller
 
         return view('item.add');
     }
+
+    /**
+     * 商品一括削除
+     */
+    public function someDelete(Request $request)
+    {
+        // eloquentによる複数削除
+        Item::destroy($request->id);    //複数データ削除（IDは配列で複数）
+        return redirect()->route('items');
+    }
+    /**
+     * 商品一件削除
+     */
+    public function oneDelete(Request $request){
+
+        $id = $request->input('delete-id');
+
+        $this->delete($id);
+        return redirect()->route('items');
+    }
+    /**
+     * 削除機能
+     */
+    public function delete($id){
+/*         return Item::destroy($id); */
+    }
 }
