@@ -28,6 +28,26 @@ class ItemController extends Controller
 
         return view('item.index', compact('items'));
     }
+    /**
+     * 在庫不足一覧
+     */
+    public function stockIndex()
+    {
+        // 商品一覧取得
+        $items = Item::where('id','<=',7)->get();
+
+        return view('item.home', compact('items'));
+    }
+    /**
+     * 商品検索
+     */
+    /**
+     * フリーワード検索結果の表示
+     */
+    public function search(Request $request)
+    {
+     $this->index();
+    }
 
     /**
      * 商品登録
@@ -55,29 +75,43 @@ class ItemController extends Controller
         return view('item.add');
     }
 
-    /**
-     * 商品一括削除
-     */
-    public function someDelete(Request $request)
+    public function edit(Request $request, Item $item)
     {
-        // eloquentによる複数削除
-        Item::destroy($request->id);    //複数データ削除（IDは配列で複数）
-        return redirect()->route('items');
-    }
-    /**
-     * 商品一件削除
-     */
-    public function oneDelete(Request $request){
+        // POSTリクエストのとき
+        if ($request->isMethod('post')) {
+            // バリデーション
+            $this->validate($request, [
+                'name' => 'required|max:100',
+            ]);
 
-        $id = $request->input('delete-id');
+            $item = Item::find($request->id);
 
-        $this->delete($id);
-        return redirect()->route('items');
+            // 商品登録
+            $item->update([
+                'user_id' => Auth::user()->id,
+                'name' => $request->name,
+                'type' => $request->type,
+                'detail' => $request->detail,
+            ]);
+
+            return redirect('/items');
+        }
+        return view('item.edit',[ 'item' => $item ]);
     }
+
     /**
-     * 削除機能
+     * 商品削除
      */
-    public function delete($id){
-/*         return Item::destroy($id); */
+    public function destroy(Request $request,Item $item){
+        if($item !== null){
+        Item::destroy($item->id);
+        }
+        if($request !== null){
+        Item::destroy($request->id);
+        }
+        return redirect()->route('items');
+
     }
+
+    
 }

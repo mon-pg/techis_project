@@ -3,12 +3,15 @@
 @section('title', '商品一覧')
 
 @section('content_header')
-    <h1>商品一覧</h1>
+    <h1>商品管理一覧</h1>
 @stop
 
 @section('content')
 
 @include('item.modal')
+
+@include('item.search')
+
 
     <div class="row">
         <div class="col-12">
@@ -24,8 +27,8 @@
                             <tr>
                                 <th>
                                     <div class="d-flex flex-row-reverse">
-                                        <input class="form-check-input" type="checkbox" id="all">
-                                        <label class="form-check-label mr-3" for="all">
+                                        <input class="form-check-input select-item" type="checkbox" id="all">
+                                        <label class="form-check-label mr-3 select-item" for="all">
                                             選択
                                         </label>
                                     </div>
@@ -41,10 +44,10 @@
                         <tbody>
                             @foreach ($items as $item)
                                 <tr>
-                                    <td class="text-center"><input type="checkbox" class="delete-check" name="delete-check[]" value="{{ $item->id }}"></td>
+                                    <td class="text-center"><input type="checkbox" class="delete-check select-item" name="delete-check[]" value="{{ $item->id }}"></td>
                                 
                                     <td>{{ $item->id }}</td>
-                                    <td>{{ $item->name }}</td>
+                                    <td><a href="{{ url('/items/'.$item->id) }}">{{ $item->name }}</a></td>
                                     <td>{{ $item->type }}</td>
                                     <td>{{ $item->detail }}</td>
                                     

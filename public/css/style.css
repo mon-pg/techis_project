@@ -1,4 +1,13 @@
 .delete-check{
     transform: scale(1.2);
-    
+
+}
+
+td a{
+    color: rgb(119, 119, 194);
+    font-weight: bold;
+}
+
+.select-item{
+    cursor: pointer;
 }

@@ -17,13 +17,31 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
+Route::get('/view/items', [App\Http\Controllers\HomeController::class, 'items']);
+
 Auth::routes();
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// ログインページへのアクセス制御
+Route::get('/login', function () {
+    // URLを直接知っている場合のみログインページを表示
+    if (request()->has('corporate')) {
+        return view('auth.login');
+    }
+    // URLを知らないお客さんは商品一覧ページにリダイレクト
+    return redirect('/view/items');
+})->name('login');
 
-Route::prefix('items')->group(function () {
+
+
+Route::middleware('auth')->get('/', [App\Http\Controllers\ItemController::class, 'stockIndex']);
+
+Route::prefix('items')->middleware('auth')->group(function () {
     Route::get('/', [App\Http\Controllers\ItemController::class, 'index'])->name('items');
+    Route::get('/search', [App\Http\Controllers\ItemController::class, 'search']);
     Route::get('/add', [App\Http\Controllers\ItemController::class, 'add']);
     Route::post('/add', [App\Http\Controllers\ItemController::class, 'add']);
-    Route::post('/some_delete',[\App\Http\Controllers\ItemController::class, 'someDelete']);
+    Route::get('/{item}', [App\Http\Controllers\ItemController::class, 'edit']);//ここ/{変数（item）}って書いてるから、/items/○○が全部ここに飛んでしまう。変数の前に/editとか、書かないといかん。この書き方良くない！
+    Route::post('/{item}', [App\Http\Controllers\ItemController::class, 'edit']);  
+    Route::post('/delete/{item}', [App\Http\Controllers\ItemController::class, 'destroy']);
+    Route::post('/some/delete', [App\Http\Controllers\ItemController::class, 'destroy']);
 });

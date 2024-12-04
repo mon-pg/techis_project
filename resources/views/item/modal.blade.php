@@ -7,8 +7,8 @@
                     <h4 class="modal-title" id="myModalLabel">削除確認</h4>
                 </div>
                 <div class="modal-body">
-                    <p class="message"></p>
-                    <p class="fs-5 fw-bolder"></p>
+                    <p class="delete-message">選択した項目を本当に削除しますか？</p>
+                    <p class="none-message"></p>
 
                 </div>
                 <div class="modal-footer">                    

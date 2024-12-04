@@ -1,37 +1,43 @@
+$.ajaxSetup({
+    headers: {
+    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),},
+});
+
 window.onload = function() {
 //一括削除機能
-    $('#deleteModal').on('shown.bs.modal', function (event) {   //選択一括削除ボタンが押されたら
+    $('#deleteModal').on('shown.bs.modal', function (event) {   //選択一括削除ボタンが押されたらモーダルを開く
 
         const ids = $('.delete-check:checked').map(function(){  //チェックされたitemのIDを取得
             return $(this).val();
         }).get();
-        //console.log(ids);
+        console.log(ids);
         //console.log(ids.length);
 
         const modal = $(this);//モーダルを取得
 
-        if(ids.length == 0) {    
-            modal.find('.modal-body p.message').eq(0).html("選択された項目がありません。");
+        if(ids.length == 0) {  
+            modal.find('.modal-body p.delete-message').hide();  
+            modal.find('.modal-body p.none-message').html("選択された項目がありません。");
             modal.find('.modal-footer button').hide();
             return false;   //処理中断
         }else{
-            modal.find('.modal-body p.message').eq(0).html("選択した項目を本当に削除しますか？");
+            modal.find('.modal-body p.none-message').hide();
+            modal.find('.modal-body p.delete-message').show();
             modal.find('.modal-footer button').show();
 
-            $('.btn-delete-confirm').on('click', function(){
-                $.ajaxSetup({
-                    headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),},
-                });
+            $('.btn-delete-confirm').off('click').on('click', function(){
                 $.ajax({
                 //POST通信
                 type: "POST",
                 //ここでデータの送信先URLを指定します。
-                url: "/items/some_delete",
+                url: "/items/some/delete",
                 dataType: "text",
                 data: {
                     id: ids,
                 },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'), // これが必要
+                  },
                 })
                 // 成功
                 .done(function (results){
@@ -44,7 +50,7 @@ window.onload = function() {
                 })
                 // 失敗
                 .fail(function(jqXHR, textStatus, errorThrown){
-                    alert('削除に失敗しました。');
+                    alert('通信に失敗しました。');
                     console.log("ajax通信に失敗しました");
                     console.log("jqXHR          : " + jqXHR.status); // HTTPステータスが取得
                     console.log("textStatus     : " + textStatus);    // タイムアウト、パースエラー
@@ -52,7 +58,7 @@ window.onload = function() {
                     console.log("URL            : " + url);        
                 });
 
-            })
+            });
                
         }
     });
