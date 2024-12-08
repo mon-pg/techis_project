@@ -15,6 +15,10 @@ class Item extends Model
         'user_id',
         'name',
         'type',
+        'salesStatus',
+        'salesDate',
+        'stock',
+        'sdStock',
         'detail',
     ];
 
@@ -32,5 +36,6 @@ class Item extends Model
      * @var array<string, string>
      */
     protected $casts = [
+        'salesDate' => 'date',
     ];
 }

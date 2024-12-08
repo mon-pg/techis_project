@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+/* エラーのため以下追加 */
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -37,4 +40,15 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+    
+     // ログアウト処理をオーバーライド
+     public function logout(Request $request)
+     {
+         Auth::logout(); // ユーザーをログアウト
+         $request->session()->invalidate(); // セッションを無効化
+         $request->session()->regenerateToken(); // トークンを再生成
+ 
+         // ログイン画面にリダイレクト
+         return redirect('/login/?corporate=1');
+     }
 }

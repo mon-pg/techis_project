@@ -20,6 +20,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'role',
+        'department',
+        'status',
         'password',
     ];
 
@@ -42,4 +45,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * ユーザーの更新ログを取得
+     */
+    public function logs()
+    {
+        return $this->hasMany(Log::class);
+    }
 }

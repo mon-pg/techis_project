@@ -295,6 +295,11 @@ return [
             'url'  => 'items',
             'icon' => 'fas fa-gamepad',
         ],
+        [
+            'text' => 'ユーザー管理',
+            'url'  => 'users',
+            'icon' => 'fas fa-user',
+        ],
 
         // AdminLTEデフォルト
         /*

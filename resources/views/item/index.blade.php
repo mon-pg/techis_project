@@ -12,7 +12,7 @@
 
 @include('item.search')
 
-
+@if(!empty($items[0]))
     <div class="row">
         <div class="col-12">
             <div class="card">            
@@ -26,7 +26,7 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <div class="d-flex flex-row-reverse">
+                                    <div class="d-inline-flex flex-row-reverse">
                                         <input class="form-check-input select-item" type="checkbox" id="all">
                                         <label class="form-check-label mr-3 select-item" for="all">
                                             選択
@@ -34,9 +34,11 @@
                                     </div>
                                 </th>
                                 <th>ID</th>
-                                <th>名前</th>
-                                <th>種別</th>
-                                <th>詳細</th>
+                                <th>タイトル</th>
+                                <th>ジャンル</th>
+                                <th>販売状況</th>
+                                <th>在庫状況</th>
+                                <th>最終更新日</th>
                                 
                                 
                             </tr>
@@ -48,8 +50,18 @@
                                 
                                     <td>{{ $item->id }}</td>
                                     <td><a href="{{ url('/items/'.$item->id) }}">{{ $item->name }}</a></td>
-                                    <td>{{ $item->type }}</td>
-                                    <td>{{ $item->detail }}</td>
+                                    <td>{{ $types[$item->type] }}</td>
+                                    <td>{{ $sales[$item->salesStatus] }}</td>
+                                    <td>
+                                        @if( $item->stock >= $item->sdStock)
+                                            在庫あり〇
+                                        @elseif( $item->stock === 0 )
+                                            在庫なし×
+                                        @else
+                                            在庫不足△
+                                        @endif
+                                    </td>
+                                    <td>{{ $item->updated_at->format('Y/m/d') }}</td>
                                     
                                 </tr>
                             @endforeach
@@ -59,6 +71,10 @@
             </div>
         </div>
     </div>
+@else
+    <p>表示できる商品がありません。</p>
+    <p>商品登録は<a href="{{ url('items/add') }}">こちら</a>から。</p>
+@endif
 @stop
 
 @section('css')

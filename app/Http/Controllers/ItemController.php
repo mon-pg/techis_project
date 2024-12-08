@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ItemRequest;
 use App\Models\Item;
+use App\Models\Log;
+use Carbon\Carbon;
 
 class ItemController extends Controller
 {
@@ -17,7 +20,31 @@ class ItemController extends Controller
     {
         $this->middleware('auth');
     }
-
+    /**
+     * ジャンル取得
+     */
+    public function type(){
+        $types = [
+            1 => 'RPG',
+            2 => '対戦',
+            3 => '育成',
+            4 => 'パーティ',
+            5 => 'その他',
+        ];
+        return $types;
+    }
+    /**
+     * 販売状況取得
+     */
+    public function salesStatus(){
+        $sales = [
+            1 => '販売中',
+            2 => '生産終了',
+            3 => '発売予定',
+            4 => '未定',
+        ];
+        return $sales;
+    }
     /**
      * 商品一覧
      */
@@ -25,18 +52,36 @@ class ItemController extends Controller
     {
         // 商品一覧取得
         $items = Item::all();
-
-        return view('item.index', compact('items'));
+        $sales = $this->salesStatus();
+        $types = $this->type();
+        return view('item.index', ['items' => $items, 'types' => $types, 'sales' => $sales,]);
     }
     /**
-     * 在庫不足一覧
+     * ホーム画面
      */
-    public function stockIndex()
+    public function homeIndex()
     {
-        // 商品一覧取得
-        $items = Item::where('id','<=',7)->get();
+        // 在庫不足の一覧
+        $items = Item::find($this->stockIds());
+        $types = $this->type();
+        $sales = $this->salesStatus();
+        $logs = Log::where('target_type', 'item')->get();
 
-        return view('item.home', compact('items'));
+        return view('item.home', ['items' => $items,'types' => $types, 'sales' => $sales, 'logs' => $logs]);
+    }
+    /**
+     * 在庫不足のitemIDの取得
+     */
+    public function stockIds(){
+        $lessStockIds = [] ;
+        $items = Item::all();
+        foreach ($items as $item){
+            $status = $item->stock - $item->sdStock;
+            if($status <= 0){   //基準在庫以下
+                $lessStockIds[] = $item->id;
+            }
+        }
+        return $lessStockIds;
     }
     /**
      * 商品検索
@@ -52,51 +97,58 @@ class ItemController extends Controller
     /**
      * 商品登録
      */
-    public function add(Request $request)
+    public function add(ItemRequest $request)
     {
         // POSTリクエストのとき
         if ($request->isMethod('post')) {
-            // バリデーション
-            $this->validate($request, [
-                'name' => 'required|max:100',
-            ]);
-
             // 商品登録
             Item::create([
                 'user_id' => Auth::user()->id,
                 'name' => $request->name,
                 'type' => $request->type,
+                'salesStatus' => $request->salesStatus,
+                'salesDate' => $request->salesDate,
+                'stock' => $request->stock,
+                'sdStock' => $request->sdStock,
+                'stockStatus' => $request->stockStatus,
                 'detail' => $request->detail,
             ]);
 
             return redirect('/items');
         }
-
-        return view('item.add');
+        $auth_user = Auth::user();
+        return view('item.add',['auth_user' => $auth_user]);
     }
 
-    public function edit(Request $request, Item $item)
+    public function edit(ItemRequest $request, Item $item)
     {
-        // POSTリクエストのとき
-        if ($request->isMethod('post')) {
-            // バリデーション
-            $this->validate($request, [
-                'name' => 'required|max:100',
-            ]);
-
-            $item = Item::find($request->id);
-
-            // 商品登録
+            // 商品更新
             $item->update([
                 'user_id' => Auth::user()->id,
                 'name' => $request->name,
                 'type' => $request->type,
+                'salesStatus' => $request->salesStatus,
+                'salesDate' => $request->salesDate,
+                'stock' => $request->stock,
+                'sdStock' => $request->sdStock,
                 'detail' => $request->detail,
             ]);
 
             return redirect('/items');
-        }
-        return view('item.edit',[ 'item' => $item ]);
+        
+    }
+    public function editView(Item $item){
+        $auth_user = Auth::user();
+        $types = $this->type();
+        $sales = $this->salesStatus();
+        $logs = Log::where('target_type', 'item')->where('target_id',$item->id)->get();
+
+        return view('item.edit',[
+             'item' => $item,
+             'auth_user' => $auth_user,
+             'types' => $types,  
+             'sales' => $sales, 
+             'logs' => $logs]);
     }
 
     /**
