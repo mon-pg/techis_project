@@ -17,14 +17,21 @@
         <div class="col-12">
             <div class="card">            
                 <div class="card-header d-flex justify-content-between">
-                    <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" > 一括削除 </a>
-                    <p class="flex-grow-1"></p>
-                    <a href="{{ url('items/add') }}" class="btn btn-primary">商品登録</a>    
+                    @if($auth_user->role == 1)
+                        <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" > 一括削除 </a>                    
+                        <p class="flex-grow-1"></p>
+                        <a href="{{ url('items/add') }}" class="btn btn-primary">商品登録</a>
+                    @else
+                        <p class="flex-grow-1"></p>
+                        <p class="flex-grow-1"></p>
+                        <a href="{{ url('items/add') }}" class="btn btn-primary">商品登録</a>
+                    @endif    
                 </div>
                 <div class="card-body table-responsive p-0">
                     <table class="table table-hover text-nowrap">
                         <thead>
                             <tr>
+                                @if($auth_user->role == 1)
                                 <th>
                                     <div class="d-inline-flex flex-row-reverse">
                                         <input class="form-check-input select-item" type="checkbox" id="all">
@@ -33,6 +40,7 @@
                                         </label>
                                     </div>
                                 </th>
+                                @endif
                                 <th>ID</th>
                                 <th>タイトル</th>
                                 <th>ジャンル</th>
@@ -46,8 +54,9 @@
                         <tbody>
                             @foreach ($items as $item)
                                 <tr>
+                                    @if($auth_user->role == 1)
                                     <td class="text-center"><input type="checkbox" class="delete-check select-item" name="delete-check[]" value="{{ $item->id }}"></td>
-                                
+                                    @endif
                                     <td>{{ $item->id }}</td>
                                     <td><a href="{{ url('/items/'.$item->id) }}">{{ $item->name }}</a></td>
                                     <td>{{ $types[$item->type] }}</td>

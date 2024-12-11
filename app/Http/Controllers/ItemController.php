@@ -54,7 +54,8 @@ class ItemController extends Controller
         $items = Item::all();
         $sales = $this->salesStatus();
         $types = $this->type();
-        return view('item.index', ['items' => $items, 'types' => $types, 'sales' => $sales,]);
+        $auth_user = Auth::user();
+        return view('item.index', compact('items', 'types', 'sales', 'auth_user'));
     }
     /**
      * ホーム画面
@@ -65,9 +66,10 @@ class ItemController extends Controller
         $items = Item::find($this->stockIds());
         $types = $this->type();
         $sales = $this->salesStatus();
+        $auth_user = Auth::user();
         $logs = Log::where('target_type', 'item')->get();
 
-        return view('item.home', ['items' => $items,'types' => $types, 'sales' => $sales, 'logs' => $logs]);
+        return view('item.home', compact('items', 'types', 'sales', 'auth_user'));
     }
     /**
      * 在庫不足のitemIDの取得
@@ -95,6 +97,13 @@ class ItemController extends Controller
     }
 
     /**
+     * 商品登録画面
+     */
+    public function addView(){
+        $auth_user = Auth::user();
+        return view('item.add',compact('auth_user'));
+    }
+    /**
      * 商品登録
      */
     public function add(ItemRequest $request)
@@ -116,8 +125,6 @@ class ItemController extends Controller
 
             return redirect('/items');
         }
-        $auth_user = Auth::user();
-        return view('item.add',['auth_user' => $auth_user]);
     }
 
     public function edit(ItemRequest $request, Item $item)
@@ -162,8 +169,6 @@ class ItemController extends Controller
         Item::destroy($request->id);
         }
         return redirect()->route('items');
-
     }
-
     
 }

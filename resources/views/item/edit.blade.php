@@ -46,7 +46,7 @@
                 <form method="POST">
                     @csrf
                     <div class="card-body">
-                        <input type="text" name="user_id" id="user_id" value="{{ $auth_user->id }}" hidden>
+                        <input type="hidden" name="user_id" id="user_id" value="{{ $auth_user->id }}" >
                         <div class="form-group">
                             <div class="d-inline-flex"><label for="name">タイトル</label><p class="validation-mark align-self-start">*</p></div>
                             <input type="text" class="form-control" id="name" name="name" placeholder="タイトル" value="{{ old('name', $item->name) }}">
@@ -90,7 +90,7 @@
                                 <p>個</p>
                             </div>
 
-                            @if($auth_user->role === 1)
+                            @if($auth_user->role == 1)
                             <div class="form-group d-inline-flex">
                                 <div class="d-inline-flex"><label for="detail">基準在庫数</label><p class="validation-mark align-self-start">*</p></div>
                                 <input type="text" class="form-control" id="sdStock" name="sdStock" value="{{ old('sdStock', $item->sdStock) }}">
@@ -100,7 +100,7 @@
                             <div class="form-group d-flex">
                                 <label for="detail">基準在庫数</label>
                                 <input type="text" class="form-control" value="{{ $item->sdStock }}" readonly>
-                                <input type="text" class="form-control" id="sdStock" name="sdStock" value="{{ $item->sdStock }}" hidden>
+                                <input type="hidden" class="form-control" id="sdStock" name="sdStock" value="{{ $item->sdStock }}" >
                                 <p>個</p>
                             </div>
                             @endif
@@ -109,7 +109,9 @@
 
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">更新</button>
+                        @if($auth_user->role == 1)
                         <a href="#" class="btn btn-danger btn-delete-confirm" data-toggle="modal" data-target="#deleteModal" data-url="{{ url('/items/delete/'.$item->id) }}" data-id="{{ $item->id }}" > 削除 </a>
+                        @endif
                     </div>
                 </form>
             </div>

@@ -4,8 +4,9 @@ $.ajaxSetup({
 });
 
 window.onload = function() {
-
+//////////////
 //一括選択機能
+//////////////
     $('#all').on('click',function() {   //＜選択＞のチェックボックスを押したら、すべて選択
         $('input[name="user-check[]"]').prop('checked',this.checked);
       });
@@ -22,7 +23,5 @@ window.onload = function() {
         }
       });
       
-
-
-
+       
 }

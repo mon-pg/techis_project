@@ -51,25 +51,6 @@ class HomeController extends Controller
         $items = Item::all();
         $types = $this->type();
         $sales = $this->salesStatus();
-        $passwords = $this->password();
-        return view('itemsView',  ['items' => $items, 'types' => $types, 'sales' => $sales, 'passwords' => $passwords,]);
-    }
-    /**
-     * パスワードのハッシュ化（ユーザー情報の追加に使用）
-     */
-    public function password(){
-        $beforePasswords = [
-            'shioripass',
-            'tadashipass',
-            'norimitsupass',
-            'hanamipass',
-            'nahopass',
-            'shouheipass',
-        ];
-        $hashedPasswords = [];
-        foreach($beforePasswords as $pass){
-            $hashedPasswords[] = bcrypt($pass);
-        }
-        return $hashedPasswords;
+        return view('itemsView',  compact('items', 'types', 'sales'));
     }
 }

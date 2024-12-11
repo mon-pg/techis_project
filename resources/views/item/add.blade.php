@@ -76,7 +76,7 @@
                             <div class="form-group d-flex">
                                 <label for="sdStock">基準在庫数</label>
                                 <input type="text" class="form-control" value="5" readonly>
-                                <input type="text" class="form-control" id="sdStock" name="sdStock" value="5" hidden>
+                                <input type="hidden" class="form-control" id="sdStock" name="sdStock" value="5">
                                 <p>個</p>
                             </div>
                             @endif

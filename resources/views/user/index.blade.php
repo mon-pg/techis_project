@@ -13,10 +13,16 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="card">            
+            <div class="card">
+            <form action="{{ url('/users/someEdit/view') }}" method="post">
+                @csrf
                 <div class="card-header d-flex">
-                    <button onclick="" class="btn btn-primary">一括編集</button>   
-                    <a href="/users/someEdit" class="btn btn-primary">一括編集テスト</a>
+                    @if($auth_user->role == 1||$auth_user->role == 2)
+                        <button type="submit" class="btn btn-primary">一括編集</button>
+                        @if(isset($selectError))
+                        <p>{{ $selectError }}</p>
+                        @endif                        
+                    @endif
                 </div>
                 <div class="card-body table-responsive p-0">
                     <table class="table table-hover text-nowrap">
@@ -40,10 +46,15 @@
                         <tbody>
                             @foreach ($users as $user)
                                 <tr>
-                                    <td class="text-center"><input type="checkbox" class="user-check select-user" name="user-check[]" value="{{ $user->id }}"></td>
-                                
+                                    <td class="text-center"><input type="checkbox" class="user-check select-user" name="user-check[]" value="{{ $user->id }}"></td>         
                                     <td>{{ $user->id }}</td>
-                                    <td><a href="{{ url('/users/edit/'.$user->id) }}">{{ $user->name }}</a></td>
+                                    <td>
+                                        @if($auth_user->role == 1||$auth_user->role == 2)
+                                            <a href="{{ url('/users/edit/'.$user->id) }}">{{ $user->name }}</a>
+                                        @else
+                                            <p>{{ $user->name }}</p>
+                                        @endif
+                                    </td>
                                     <td>{{ $roles[$user->role] }}</td>
                                     <td> 
                                         @if($user->department >= 1)
@@ -53,12 +64,12 @@
                                         @endif
                                     </td>
                                     <td>{{ $user->email }}</td>
-                                    
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
+            </form>
             </div>
         </div>
     </div>
