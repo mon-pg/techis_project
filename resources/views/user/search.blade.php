@@ -5,14 +5,19 @@
         @endif
         <div class="d-inline-flex mb-3">
             <div class="d-flex flex-column">
-                <input class="form-control" type="search" name="keyword" placeholder="キーワード　検索"
-                    value="{{ isset($keywords) ? $keywords : '' }}">
+                <input class="form-control" type="search" name="sKeywords" placeholder="キーワード　検索"
+                    value="{{ isset($sKeywords) ? $sKeywords : '' }}">
 
                 <div class="search-content d-flex">
                     <p class="mini-title">絞り込み：</p>
                     <div class="form-floating">
                         <select class="form-select" name="sRole">
+                            @if(isset($sRole))
+                            <option value="{{ $sRole }}" selected>{{ $roles[$sRole] }}</option>
+                            <option value="">権限を選択</option>
+                            @else
                             <option value="" selected>権限を選択</option>
+                            @endif
                             <option value="1">管理者</option>
                             <option value="2">編集者</option>
                             <option value="3">閲覧者</option>
@@ -20,7 +25,12 @@
                     </div>
                     <div class="form-floating">
                         <select class="form-select" name="sDepartment">
+                            @if(isset($sDepartment))
+                            <option value="{{ $sDepartment }}" selected>{{ $departments[$sDepartment] }}</option>
+                            <option value="">部署を選択</option>
+                            @else
                             <option value="" selected>部署を選択</option>
+                            @endif
                             <option value="1">商品管理部</option>
                             <option value="2">営業部</option>
                             <option value="3">商品開発部</option>

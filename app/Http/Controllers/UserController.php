@@ -66,7 +66,7 @@ class UserController extends Controller
         $roles = $this->roles();
         $departments = $this->departments();
 
-        $sKeywords = $request->input('keyword');
+        $sKeywords = $request->input('sKeywords');
         $sRole = $request->input('sRole');
         $sDepartment = $request->input('sDepartment');
 

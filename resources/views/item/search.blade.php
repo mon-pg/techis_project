@@ -1,77 +1,42 @@
-<form action="#" method="GET">
+<form action="{{ url('/users/search') }}" method="get">
             @csrf
+        @if(!empty($searchError))
+            <p>{{ $searchError }}</p>
+        @endif
         <div class="d-inline-flex mb-3">
             <div class="d-flex flex-column">
-                <input class="form-control" type="search" name="query" placeholder="フリーワード検索"
-                    value="{{ request('query') }}">
-                <div class="categoryChecks d-flex">
-                    <p class="mini-title">ジャンル：</p>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="category[]" value="1"
-                            id="searchFor1"
-                            {{ is_array(request('category')) && in_array(1, request('category')) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="searchFor1">
-                            RPG　
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="category[]" value="2"
-                            id="searchFor2"
-                            {{ is_array(request('category')) && in_array(2, request('category')) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="searchFor2">
-                            対戦　
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="category[]" value="3"
-                            id="searchFor3"
-                            {{ is_array(request('category')) && in_array(3, request('category')) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="searchFor3">
-                            育成　
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="category[]" value="4"
-                            id="searchFor4"
-                            {{ is_array(request('category')) && in_array(4, request('category')) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="searchFor4">
-                            パーティ　
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="category[]" value="5"
-                            id="searchFor5"
-                            {{ is_array(request('category')) && in_array(5, request('category')) ? 'checked' : '' }}>
-                        <label class="form-check-label" for="searchFor5">
-                            その他　
-                        </label>
-                    </div>
-                </div>
+                <input class="form-control" type="search" name="sKeywords" placeholder="キーワード　検索"
+                    value="{{ isset($sKeywords) ? $sKeywords : '' }}">
+
                 <div class="search-content d-flex">
                     <p class="mini-title">絞り込み：</p>
                     <div class="form-floating">
-                        <select class="form-select" id="sale-status">
-                            <option selected>販売状況</option>
-                            <option value="1">販売中</option>
-                            <option value="2">生産終了</option>
-                            <option value="3">未定</option>
+                        <select class="form-select" name="sSalesStatus">
+                            @if(isset($sSalesStatus))
+                            <option value="{{ $sSalesStatus }}" selected>{{ $types[$sSalesStatus] }}</option>
+                            <option value="">販売状況を選択</option>
+                            @else
+                            <option value="" selected>販売状況を選択</option>
+                            @endif
+                            <option value="1">発売中</option>
+                            <option value="2"></option>
+                            <option value="3"></option>
                         </select>
                     </div>
                     <div class="form-floating">
-                        <select class="form-select" id="leftover">
-                            <option selected>在庫状況</option>
-                            <option value="1">〇</option>
-                            <option value="2">△</option>
-                            <option value="3">✕</option>
+                        <select class="form-select" name="sStockStatus">
+                            @if(isset($sStockStatus))
+                            <option value="{{ $sStockStatus }}" selected>{{ $stockStatuses[$sStockStatus] }}</option>
+                            <option value="">在庫状況を選択</option>
+                            @else
+                            <option value="" selected>在庫状況を選択</option>
+                            @endif
+                            <option value="1">在庫あり</option>
+                            <option value="2">在庫なし</option>
                         </select>
                     </div>
                 </div>
-                <div class="d-flex">
-                        <p class="mini-title">対象期間：</p>
-                        <input type="date" name="from" placeholder="from_date" value="">
-                            <span class="mx-3">～</span>
-                        <input type="date" name="until" placeholder="until_date" value="">
-                </div>
+                
             </div>
             <button class="btn btn-secondary align-self-start" type="submit">検索</button>
         </div>
