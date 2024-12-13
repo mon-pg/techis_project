@@ -126,7 +126,9 @@ class ItemController extends Controller
             return redirect('/items');
         }
     }
-
+    /**
+     * 商品編集
+     */
     public function edit(ItemRequest $request, Item $item)
     {
             // 商品更新
@@ -151,6 +153,22 @@ class ItemController extends Controller
         $logs = Log::where('target_type', 'item')->where('target_id',$item->id)->get();
 
         return view('item.edit',[
+             'item' => $item,
+             'auth_user' => $auth_user,
+             'types' => $types,  
+             'sales' => $sales, 
+             'logs' => $logs]);
+    }
+    /**
+     * 商品詳細画面
+     */
+    public function itemView(Item $item){
+        $auth_user = Auth::user();
+        $types = $this->type();
+        $sales = $this->salesStatus();
+        $logs = Log::where('target_type', 'item')->where('target_id',$item->id)->get();
+
+        return view('item.detail',[
              'item' => $item,
              'auth_user' => $auth_user,
              'types' => $types,  

@@ -22,14 +22,6 @@
     
 </head>
 <body>
-<!--     @if (!empty($passwords[0]))
-    <p>あるよ</p>
-    @foreach($passwords as $password)
-        <p>{{ $password }}</p>
-    @endforeach
-    @else
-    <p>ないよ</p>
-    @endif -->
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
@@ -53,7 +45,7 @@
         </nav>
 
         <main class="py-4 w-100">
-        @if(!empty($items[0]))
+        @if(count($items) > 0)
         <div class="main-area container">
                 <p>商品検索</p>
                 @include('item.search')

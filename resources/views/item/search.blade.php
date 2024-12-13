@@ -62,7 +62,7 @@
                             <option selected>在庫状況</option>
                             <option value="1">〇</option>
                             <option value="2">△</option>
-                            <option value="3">×</option>
+                            <option value="3">✕</option>
                         </select>
                     </div>
                 </div>

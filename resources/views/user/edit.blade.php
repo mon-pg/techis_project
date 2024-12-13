@@ -56,7 +56,7 @@
                             <p>権限：</p>
                             @if($auth_user->role == 1 && $auth_user->id !== $user->id)
                                 <select class="form-select" id="role" name="role">
-                                    <option value="{{ $user->role }}" selected>{{ $roles[$user->role] }}</option>
+                                    <option value="{{ old('role',$user->role) }}" selected>{{ $roles[$user->role] }}</option>
                                     <option value="1">管理者</option>
                                     <option value="2">編集者</option>
                                     <option value="3">閲覧者</option>
@@ -71,7 +71,7 @@
                             <p>部署：</p>
                             <select class="form-select" id="department" name="department">
                                 @if(!empty($user->department))
-                                    <option value="{{ $user->department }}" selected>{{ $departments[$user->department] }}</option>
+                                    <option value="{{ old('department', $user->department) }}" selected>{{ $departments[$user->department] }}</option>
                                 @else
                                     <option selected>部署を選択</option>
                                 @endif

@@ -28,6 +28,7 @@
                     <table class="table table-hover text-nowrap">
                         <thead>
                             <tr>
+                                @if($auth_user->role == 1 || $auth_user->role == 2)
                                 <th>
                                     <div class="d-inline-flex flex-row-reverse mx-auto">
                                         <input class="form-check-input select-user" type="checkbox" id="all">
@@ -36,6 +37,7 @@
                                         </label>
                                     </div>
                                 </th>
+                                @endif
                                 <th>ID</th>
                                 <th>名前</th>
                                 <th>権限</th>
@@ -44,9 +46,13 @@
                             </tr>
                         </thead>
                         <tbody>
+                            
                             @foreach ($users as $user)
                                 <tr>
+                                    
+                                    @if($auth_user->role == 1||$auth_user->role == 2)
                                     <td class="text-center"><input type="checkbox" class="user-check select-user" name="user-check[]" value="{{ $user->id }}"></td>         
+                                    @endif
                                     <td>{{ $user->id }}</td>
                                     <td>
                                         @if($auth_user->role == 1||$auth_user->role == 2)
@@ -66,9 +72,15 @@
                                     <td>{{ $user->email }}</td>
                                 </tr>
                             @endforeach
-                        </tbody>
+                        </tbody>                        
                     </table>
                 </div>
+                @if(isset($noUser))
+                    <div class="card-footer">
+                        <p>{{$noUser}}</p>
+                    </div>     
+                @endif
+                
             </form>
             </div>
         </div>

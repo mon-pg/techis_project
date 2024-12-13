@@ -57,6 +57,54 @@ class UserController extends Controller
 
         return view('user.index',compact('users', 'roles', 'departments', 'auth_user'));
     }
+    /**
+     * ユーザー検索機能
+     */
+    public function search(Request $request){
+        $users = User::query();
+        $auth_user = Auth::user();
+        $roles = $this->roles();
+        $departments = $this->departments();
+
+        $sKeywords = $request->input('keyword');
+        $sRole = $request->input('sRole');
+        $sDepartment = $request->input('sDepartment');
+
+        if(empty($sKeywords)&&empty($sRole)&&empty($sDepartment)){   //検索内容が空の場合
+            $searchError = '※検索項目を入力してください。';
+            $users = $users->get();
+            return view('user.index',compact('users', 'roles', 'departments', 'auth_user', 'searchError'));
+        }else{
+
+            if(!empty($sRole)){
+                $users->where('role', $sRole);
+            }
+            if(!empty($sDepartment)){
+                $users->where('department', $sDepartment);
+            }
+            if(!empty($sKeywords)){
+                // 全角の英数字とスペースを半角に変換後、半角で区切った配列に変換
+                $keywords = explode(' ', mb_convert_kana($sKeywords, 'as'));
+                
+                $users->where(function($query) use ($keywords){
+                    foreach($keywords as $keyword){
+                    $query->orWhere('name', 'LIKE', "%$keyword%")
+                            ->orWhere('email', 'LIKE', "%$keyword%");       
+                    }
+                });
+                
+            }
+           
+            $users = $users->get();            
+            if(count($users) === 0){
+                $noUser = '該当するユーザーが存在しません。';
+                return view('user.index', compact('users', 'roles', 'departments', 'auth_user', 'noUser'));
+            }else{
+                return view('user.index', compact('users', 'roles', 'departments', 'auth_user', 'sKeywords', 'sRole', 'sDepartment'));
+            }
+        }
+    }
+
 
     /**
      * 一括編集画面

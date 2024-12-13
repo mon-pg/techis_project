@@ -41,6 +41,7 @@ Route::prefix('items')->middleware('auth')->group(function () {
     Route::get('/search', [App\Http\Controllers\ItemController::class, 'search']);
     Route::get('/add', [App\Http\Controllers\ItemController::class, 'addView']);
     Route::post('/add', [App\Http\Controllers\ItemController::class, 'add']);
+    Route::get('/detail/{item}', [App\Http\Controllers\ItemController::class, 'itemView']);
     Route::get('/{item}', [App\Http\Controllers\ItemController::class, 'editView']);//ここ/{変数（item）}って書いてるから、/items/○○が全部ここに飛んでしまう。変数の前に/editとか、書かないといかん。この書き方良くない！
     Route::post('/{item}', [App\Http\Controllers\ItemController::class, 'edit']);  
     Route::post('/delete/{item}', [App\Http\Controllers\ItemController::class, 'destroy']);
@@ -49,6 +50,7 @@ Route::prefix('items')->middleware('auth')->group(function () {
 
 Route::prefix('users')->middleware('auth')->group(function(){
     Route::get('/', [App\Http\Controllers\UserController::class, 'index'])->name('users');
+    Route::get('/search', [App\Http\Controllers\UserController::class, 'search']);
     Route::get('/edit/{user}', [App\Http\Controllers\UserController::class, 'edit']);
     Route::post('/edit/{user}', [App\Http\Controllers\UserController::class, 'edit']);
     Route::post('/someEdit/view', [App\Http\Controllers\UserController::class, 'someEdit']);
