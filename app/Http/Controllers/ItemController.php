@@ -85,15 +85,63 @@ class ItemController extends Controller
         }
         return $lessStockIds;
     }
+    
+    
     /**
-     * 商品検索
+     * 商品検索機能
      */
-    /**
-     * フリーワード検索結果の表示
-     */
-    public function search(Request $request)
-    {
-     $this->index();
+    public function search(Request $request){
+        $items = Item::query();
+        $auth_user = Auth::user();
+        $sales = $this->salesStatus();
+        $types = $this->type();
+
+        $sKeywords = $request->input('sKeywords');
+        $sType = $request->input('type');
+        $sSalesStatus = $request->input('sSalesStatus');
+        $start = $request->input('start');
+        $end = $request->input('end');
+
+        if(empty($sKeywords)&&empty($sSalesStatus)&&empty($sType)&&empty('start')&&empty('end')){   //検索内容が空の場合
+            $searchError = '※検索項目を入力してください。';
+            $items = $items->get();
+            return view('item.index',compact('items', 'sales', 'types', 'auth_user', 'searchError'));
+        }else{
+
+            if(!empty($sType)){
+                $items->where(function($query) use ($sType){
+                    $query->orWhereIn('type', $sType);
+                });
+            }
+            if(!empty($sSalesStatus)){
+                $items->where('salesStatus', $sSalesStatus);
+            }
+            if(!empty($start)){
+                $items->where('salesDate', '>=', $start);
+            }
+            if(!empty($end)){
+                $items->where('salesDate', '<=', $end);
+            }
+            if(!empty($sKeywords)){
+                // 全角の英数字とスペースを半角に変換後、半角で区切った配列に変換
+                $keywords = explode(' ', mb_convert_kana($sKeywords, 'as'));
+                
+                $items->where(function($query) use ($keywords){
+                    foreach($keywords as $keyword){
+                    $query->orWhere('name', 'LIKE', "%$keyword%")
+                            ->orWhere('detail', 'LIKE', "%$keyword%");       
+                    }
+                });
+            }
+           
+            $items = $items->get();            
+            if(count($items) === 0){
+                $noItem = '該当する商品が存在しません。';
+                return view('item.index', compact('items', 'sales', 'types', 'auth_user', 'noItem'));
+            }else{
+                return view('item.index', compact('items', 'sales', 'types', 'auth_user', 'sKeywords', 'sSalesStatus', 'sType', 'start', 'end'));
+            }
+        }
     }
 
     /**

@@ -46,7 +46,7 @@
                                 <th>ジャンル</th>
                                 <th>販売状況</th>
                                 <th>在庫状況</th>
-                                <th>最終更新日</th>
+                                <th>発売日</th>
                                 
                                 
                             </tr>
@@ -76,7 +76,13 @@
                                             在庫不足△
                                         @endif
                                     </td>
-                                    <td>{{ $item->updated_at->format('Y/m/d') }}</td>
+                                    <td>
+                                        @if(!empty($item->salesDate))
+                                            {{ $item->salesDate->format('Y/m/d') }}
+                                        @else
+                                            <p>未定</p>
+                                        @endif
+                                    </td>
                                     
                                 </tr>
                             @endforeach
@@ -87,8 +93,12 @@
         </div>
     </div>
 @else
-    <p>表示できる商品がありません。</p>
-    <p>商品登録は<a href="{{ url('items/add') }}">こちら</a>から。</p>
+    @if(isset($noItem))
+        <p>{{ $noItem }}</p>
+    @else
+        <p>表示できる商品がありません。</p>
+        <p>商品登録は<a href="{{ url('items/add') }}">こちら</a>から。</p>
+    @endif
 @endif
 @stop
 
