@@ -45,7 +45,7 @@
         </nav>
 
         <main class="py-4 w-100">
-        @if(count($items) > 0)
+        @if(isset($items) && count($items) > 0)
         <div class="main-area container">
                 <p>商品検索</p>
                 @include('item.search')

@@ -12,7 +12,7 @@
 
 @include('item.search')
 
-@if(count($items) > 0)
+@if(isset($items) && count($items) > 0)
     <div class="row">
         <div class="col-12">
             <div class="card">            
@@ -86,12 +86,16 @@
                                     
                                 </tr>
                             @endforeach
-                        </tbody>
+                        </tbody>                       
                     </table>
+                </div>
+                <div class="card-footer">
+                {{ $items->links('pagination::bootstrap-5') }}
                 </div>
             </div>
         </div>
     </div>
+    
 @else
     @if(isset($noItem))
         <p>{{ $noItem }}</p>

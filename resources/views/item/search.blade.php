@@ -6,7 +6,7 @@
         <div class="d-inline-flex mb-3">
             <div class="d-flex flex-column">
                 <input class="form-control" type="search" name="sKeywords" placeholder="キーワード　検索"
-                    value="{{ isset($sKeywords) ? $sKeywords : '' }}">
+                    value="{{ request('sKeywords') }}">
             <div class="d-flex">
                 <p class="mini-title">ジャンル：</p>
                 <div class="checkbox mr-2">
@@ -34,12 +34,10 @@
                     <p class="mini-title">絞り込み：</p>
                     <div class="form-floating">
                         <select class="form-select" name="sSalesStatus">
-                            @if(isset($sSalesStatus))
-                            <option value="{{ $sSalesStatus }}" selected>{{ $sales[$sSalesStatus] }}</option>
-                            <option value="">販売状況を選択</option>
-                            @else
-                            <option value="" selected>販売状況を選択</option>
+                            @if(!empty(request('sSalesStatus')))
+                            <option value="{{ request('sSalesStatus') }}" selected>{{ $sales[request('sSalesStatus')]}}</option>                            
                             @endif
+                            <option value="" >販売状況を選択</option>
                             <option value="1">販売中</option>
                             <option value="2">生産終了</option>
                             <option value="3">発売予定</option>
@@ -48,12 +46,10 @@
                     </div>
                     <div class="form-floating">
                         <select class="form-select" name="sStockStatus">
-                            @if(isset($sStockStatus))
-                            <option value="{{ $sStockStatus }}" selected>{{ $stockStatuses[$sStockStatus] }}</option>
-                            <option value="">在庫状況を選択</option>
-                            @else
-                            <option value="" selected>在庫状況を選択</option>
+                            @if(!empty(request('sStockStatus')))
+                            <option value="{{ request('sStockStatus') }}" selected>{{ $stockStatuses[request('sStockStatus')]}}</option>                            
                             @endif
+                            <option value="">在庫状況を選択</option>
                             <option value="1">在庫あり〇</option>
                             <option value="2">在庫不足△</option>
                             <option value="3">在庫なし✕</option>

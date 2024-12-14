@@ -51,7 +51,7 @@ class ItemController extends Controller
     public function index()
     {
         // 商品一覧取得
-        $items = Item::all();
+        $items = Item::paginate(10);
         $sales = $this->salesStatus();
         $types = $this->type();
         $auth_user = Auth::user();
@@ -95,17 +95,23 @@ class ItemController extends Controller
         $auth_user = Auth::user();
         $sales = $this->salesStatus();
         $types = $this->type();
+        $stockStatuses = [
+            1 => '在庫あり〇',
+            2 => '在庫不足△',
+            3 => '在庫なし✕',
+        ];
 
         $sKeywords = $request->input('sKeywords');
         $sType = $request->input('type');
         $sSalesStatus = $request->input('sSalesStatus');
+        $sStockStatus = $request->input('sStockStatus');
         $start = $request->input('start');
         $end = $request->input('end');
 
-        if(empty($sKeywords)&&empty($sSalesStatus)&&empty($sType)&&empty('start')&&empty('end')){   //検索内容が空の場合
+        if(empty($sKeywords)&&empty($sSalesStatus)&&empty($sType)&&empty($start)&&empty($end)&&empty($sStockStatus)){   //検索内容が空の場合
             $searchError = '※検索項目を入力してください。';
-            $items = $items->get();
-            return view('item.index',compact('items', 'sales', 'types', 'auth_user', 'searchError'));
+            $items = $items->paginate(10);
+            return view('item.index',compact('items', 'sales', 'types', 'stockStatuses', 'auth_user', 'searchError'));
         }else{
 
             if(!empty($sType)){
@@ -122,6 +128,26 @@ class ItemController extends Controller
             if(!empty($end)){
                 $items->where('salesDate', '<=', $end);
             }
+            if(!empty($sStockStatus)){
+                $stockItems = $items->get();
+                $num = [];
+                foreach ($stockItems as $item){
+                    if($item->stock >= $item->sdStock){
+                        $num[1][] = $item->id;
+                    }elseif($item->stock === 0){
+                        $num[3][] = $item->id;
+                    }else{
+                        $num[2][] = $item->id;
+                    }
+                }
+                if(isset($num[$sStockStatus])){
+                    $ids = $num[$sStockStatus];
+                }else{
+                    $ids = [];
+                }
+                //dd([$num[1],$num[2],$num[3],$ids]);
+                $items->find($ids);
+            }
             if(!empty($sKeywords)){
                 // 全角の英数字とスペースを半角に変換後、半角で区切った配列に変換
                 $keywords = explode(' ', mb_convert_kana($sKeywords, 'as'));
@@ -133,13 +159,14 @@ class ItemController extends Controller
                     }
                 });
             }
-           
-            $items = $items->get();            
-            if(count($items) === 0){
+            
+            $check = $items->get();
+            $items = $items->paginate(10)->appends($request->query());;            
+            if(count($check) === 0){
                 $noItem = '該当する商品が存在しません。';
-                return view('item.index', compact('items', 'sales', 'types', 'auth_user', 'noItem'));
+                return view('item.index', compact('items', 'sales', 'types', 'auth_user', 'sKeywords', 'sSalesStatus', 'stockStatuses', 'sType', 'start', 'end', 'noItem'));
             }else{
-                return view('item.index', compact('items', 'sales', 'types', 'auth_user', 'sKeywords', 'sSalesStatus', 'sType', 'start', 'end'));
+                return view('item.index', compact('items', 'sales', 'types', 'auth_user', 'sKeywords', 'sSalesStatus', 'stockStatuses', 'sType', 'start', 'end'));
             }
         }
     }

@@ -9,7 +9,7 @@
     <p class="h2">商品検索</p>
 @include('item.search')
     <p class="h2">在庫状況</p>
-        @if(count($items) > 0)
+        @if(isset($items) && count($items) > 0)
             <p>下記の商品在庫が不足しています。</p>
             <div class="row">
                 <div class="col-12">
@@ -56,7 +56,7 @@
             <p>現在、在庫が不足している商品はありません。</p>
         @endif
     <p class="h2">更新ログ</p>
-        @if(count($logs) > 0)
+        @if(isset($logs) && count($logs) > 0)
             <table>
                 @foreach($logs as $log)
                 <tr>
