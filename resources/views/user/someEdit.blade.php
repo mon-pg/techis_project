@@ -1,14 +1,23 @@
 @extends('adminlte::page')
 
-@section('title', '権限一括編集')
+@section('title', '一括編集')
 
 @section('content_header')
-    <h1>権限一括編集</h1>
+<div class="text-center">
+    <div class="row">
+        <div class="col col-sm-auto">
+            <a href="#" class="btn-back" onclick="history.back()">戻る</a>
+        </div>
+        <h1 class="col-md-auto">一括編集</h1>
+    </div>
+</div>
 @stop
 
 @section('content')
+
     <div class="row">
-        <div class="col-12">
+        <div class="col-sm-auto"></div>
+        <div class="col-md-10">
         <form action="{{ url('/users/someEdit') }}" method="post">
         @csrf
             <div class="card">            
@@ -76,6 +85,7 @@
         </form>
         </div>
     </div>
+    
 @stop
 
 @section('css')

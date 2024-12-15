@@ -24,3 +24,18 @@ td a{
     overflow: hidden; /* はみ出たテキストを隠す */
     text-overflow: ellipsis; /* はみ出た部分に省略記号を表示 */
 }
+
+/* 戻るボタン */
+.btn-back {
+    width: fit-content;
+	padding: 0.5rem 1rem;
+	background: #acacac;
+	color: #fff;
+    border: none;
+	border-radius: 10px;
+	transition: 0.15s;
+}
+.btn-back:hover {
+	background: #7a7a7a;
+	color: #fff;
+}

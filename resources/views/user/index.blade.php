@@ -10,7 +10,7 @@
 
 @include('user.search')
 
-
+@if(isset($users) && count($users) > 0)
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -75,16 +75,20 @@
                         </tbody>                        
                     </table>
                 </div>
-                @if(isset($noUser))
-                    <div class="card-footer">
-                        <p>{{$noUser}}</p>
-                    </div>     
-                @endif
+                <div class="card-footer">
+                    {{ $users->links('pagination::bootstrap-5') }}
+                
+                </div>
+                
                 
             </form>
             </div>
         </div>
     </div>
+@endif
+@if(isset($noUser))                    
+        <p>{{$noUser}}</p>
+@endif
 @stop
 
 @section('css')

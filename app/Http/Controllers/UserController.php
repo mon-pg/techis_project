@@ -50,7 +50,7 @@ class UserController extends Controller
      * ユーザー一覧
      */
     public function index() {
-        $users = User::all();
+        $users = User::paginate(10);
         $auth_user = Auth::user();
         $roles = $this->roles();
         $departments = $this->departments();
@@ -94,9 +94,9 @@ class UserController extends Controller
                 });
                 
             }
-           
-            $users = $users->get();            
-            if(count($users) === 0){
+            $checks = $users->get();
+            $users = $users->paginate(10)->appends($request->query());            
+            if(count($checks) === 0){
                 $noUser = '該当するユーザーが存在しません。';
                 return view('user.index', compact('users', 'roles', 'departments', 'auth_user', 'noUser'));
             }else{
@@ -164,10 +164,11 @@ class UserController extends Controller
         // POSTリクエストのとき
         if ($request->isMethod('post')) {
             // バリデーション
-            $this->validate($request, [
+            $request->validate([
                 'id' => 'required',
                 'name' => 'required',
                 'role' => 'required',
+                'email' => 'required|email',
             ]);
 
             if(!empty($request->department)){
@@ -175,10 +176,12 @@ class UserController extends Controller
                 $user->update([
                     'role' => $request->role,
                     'department' => $request->department,
+                    'email' => $request->email,
                 ]);
             }else{
                 $user->update([
                     'role' => $request->role,
+                    'email' => $request->email,
                 ]);
             }
 
@@ -195,7 +198,7 @@ class UserController extends Controller
     /**
      * ログの作成
      */
-    public function log($type, $id, $data){
+    public function log($type, $request){
         
         return true;
 

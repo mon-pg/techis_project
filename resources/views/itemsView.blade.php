@@ -47,7 +47,7 @@
         <main class="py-4 w-100">
         @if(isset($items) && count($items) > 0)
         <div class="main-area container">
-                <p>商品検索</p>
+                <h1>商品検索</h1>
                 @include('item.search')
 
                 <div class="row">

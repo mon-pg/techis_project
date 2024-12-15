@@ -1,9 +1,17 @@
 @extends('adminlte::page')
 
-@section('title', '商品編集')
+@section('title', 'ユーザー編集')
+
 
 @section('content_header')
-    <h1>商品編集</h1>
+<div class="text-center">
+    <div class="row">
+        <div class="col col-sm-auto">
+            <a href="#" class="btn-back" onclick="history.back()">戻る</a>
+        </div>
+        <h1 class="col-md-auto">ユーザー編集</h1>
+    </div>
+</div>
 @stop
 
 @section('content')
@@ -31,7 +39,9 @@
 </div>
 <!-- body -->
     <div class="row">
-        <div class="col-md-10">
+        <div class="col col-sm-auto">
+        </div>
+        <div class="col-md-5">
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -52,7 +62,7 @@
                             <input type="hidden" class="form-control" id="name" name="name" value="{{ $user->name }}">
                         </div>
                     
-                        <div class="form-group">
+                        <div class="form-group d-flex">
                             <p>権限：</p>
                             @if($auth_user->role == 1 && $auth_user->id !== $user->id)
                                 <select class="form-select" id="role" name="role">
@@ -67,7 +77,7 @@
                             @endif
                         </div>
 
-                        <div class="form-group">
+                        <div class="form-group d-flex">
                             <p>部署：</p>
                             <select class="form-select" id="department" name="department">
                                 @if(!empty($user->department))
@@ -82,23 +92,32 @@
                             </select>
                         </div>
 
-                        <div class="form-group">
-                            <p>メールアドレス：{{ $user->email }}</p>
+                        <div class="form-group d-flex">
+                            <p>メールアドレス：</p>
+                            @if($auth_user->id === $user->id)
+                            <input type="text" class="form-control" id="email" name="email" value="{{ old('email', $user->email) }}">
+                            @else
+                            <p>{{ $user->email }}</p>
                             <input type="hidden" class="form-control" id="email" name="email" value="{{ $user->email }}">
+                            @endif
                         </div>
                     </div>
 
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">更新</button>
+                    @if($auth_user->role === 1 && $auth_user->id !== $user->id)
                         <a href="#" class="btn btn-danger btn-delete-confirm" data-toggle="modal" data-target="#deleteModal" data-url="{{ url('/users/delete/'.$user->id) }}" data-id="{{ $user->id }}" > 削除 </a>
+                    @endif
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
 @stop
 
 @section('css')
+<link rel="stylesheet" href="{{ asset('css/style.css') }}">
 @stop
 
 @section('js')

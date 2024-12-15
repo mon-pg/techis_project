@@ -3,7 +3,14 @@
 @section('title', '商品編集')
 
 @section('content_header')
-    <h1>商品編集</h1>
+<div class="text-center">
+    <div class="row">
+        <div class="col col-sm-auto"><!-- TODO:バリデーションかかったときどうする？homeから飛んだ時どうする？ -->
+            <a href="#" class="btn-back" onclick="history.back()">戻る</a>
+        </div>
+        <h1 class="col-md-auto">商品編集</h1>
+    </div>
+</div>
 @stop
 
 @section('content')
@@ -31,6 +38,7 @@
 </div>
 <!-- body -->
     <div class="row">
+        <div class="col col-sm-auto"></div>
         <div class="col-md-10">
             @if ($errors->any())
                 <div class="alert alert-danger">

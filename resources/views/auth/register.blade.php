@@ -39,11 +39,11 @@
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <label for="department" class="col-md-4 col-form-label text-md-end">{{ __('部署') }}</label>
+                            <label for="department" class="col-md-4 col-form-label text-md-end ">{{ __('部署') }}</label>
 
                             <div class="col-md-6">
-                                <select class="form-select" aria-label="部署を選択" id="department" name="department">
-                                    <option disabled selected>部署を選択</option>
+                                <select class="form-select @error('department') is-invalid @enderror" aria-label="部署を選択" id="department" name="department" required>
+                                    <option value="" disabled selected>部署を選択</option>
                                     <option value="1">商品管理部</option>
                                     <option value="2">営業部</option>
                                     <option value="3">商品開発部</option>
