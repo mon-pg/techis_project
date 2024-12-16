@@ -16,8 +16,12 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+Route::prefix('view/items')->group(function(){
+    Route::get('/', [App\Http\Controllers\HomeController::class, 'items']);
+    Route::get('/search', [App\Http\Controllers\HomeController::class, 'search']);
+    Route::get('/detail/{item}', [App\Http\Controllers\HomeController::class, 'detail']);
+});
 
-Route::get('/view/items', [App\Http\Controllers\HomeController::class, 'items']);
 
 Auth::routes();
 
@@ -34,7 +38,7 @@ Route::get('/login', function () {
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
 
-Route::middleware('auth')->get('/', [App\Http\Controllers\ItemController::class, 'homeIndex']);
+//Route::middleware('auth')->get('/', [App\Http\Controllers\ItemController::class, 'homeIndex']);
 
 Route::prefix('items')->middleware('auth')->group(function () {
     Route::get('/', [App\Http\Controllers\ItemController::class, 'index'])->name('items');

@@ -90,7 +90,7 @@
                     </table>
                 </div>
                 <div class="card-footer">
-                {{ $items->links('pagination::bootstrap-5') }}
+                {{ $items->links('vendor.pagination.StockShelf') }}  
                 </div>
             </div>
         </div>

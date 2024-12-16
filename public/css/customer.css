@@ -1,16 +1,9 @@
-.delete-check{
-    transform: scale(1.2);
-
-}
-
+/* タイトル名のaタグ */
 td a{
     color: rgb(119, 119, 194);
     font-weight: bold;
 }
 
-.select-item{
-    cursor: pointer;
-}
 
 /* 登録・更新フォーム */
 .validation-mark{
@@ -40,7 +33,44 @@ td a{
 	background: #7a7a7a;
 	color: #fff;
 }
+.card-area a {
+  text-decoration: none;  
+}
+.card {
+    width: 18rem;
+    cursor: pointer;
+}
+.card-body{
+    background-color: #fff;
+    height: 110px;
+    overflow: hidden;
+    position: relative;
+}
+.card-body::before{
+    position: absolute;
+    bottom: 0px;
+    display: block;
+    content: "";
+    height: 27px;
+    width: 100%;
+    background: linear-gradient( rgba(255, 255, 255, 0) 0%, #ffffff 95%, #ffffff 100%);
+}
+.card-title {
+    font-weight: bold;
+}
+.card:hover .card-title {
+    color: rgb(51, 111, 202); /* 青色に変更 */
+    transition: color 0.3s ease; /* なめらかな色の変化 */
+}
+.list-group li {
+    background-color: #fff;
+}
 
+.main-area{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 /* 検索窓 */
 .form-wrapper {
     max-width: 800px;
