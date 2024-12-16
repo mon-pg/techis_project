@@ -3,14 +3,16 @@
 @section('title', '商品一覧')
 
 @section('content_header')
-    <h1>商品管理一覧</h1>
+    <h1 class="container">商品管理一覧</h1>
 @stop
 
 @section('content')
 
 @include('item.modal')
 
-@include('item.search')
+@include('item.search')  
+
+
 
 @if(isset($items) && count($items) > 0)
     <div class="row">
@@ -107,7 +109,9 @@
 @stop
 
 @section('css')
-<link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 @stop
 
 @section('js')

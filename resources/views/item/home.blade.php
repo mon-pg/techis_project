@@ -7,7 +7,7 @@
 
 @section('content')
     <p class="h2">商品検索</p>
-@include('item.search')
+    @include('item.search')
     <p class="h2">在庫状況</p>
         @if(isset($items) && count($items) > 0)
             <p>下記の商品在庫が不足しています。</p>
@@ -73,7 +73,9 @@
 @stop
 
 @section('css')
-    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+    <link rel="stylesheet" href="/css/admin_custom.css">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 @stop
 
 @section('js')

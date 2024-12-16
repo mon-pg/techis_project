@@ -38,7 +38,7 @@ Route::get('/login', function () {
 Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
 
-//Route::middleware('auth')->get('/', [App\Http\Controllers\ItemController::class, 'homeIndex']);
+Route::middleware('auth')->get('/', [App\Http\Controllers\ItemController::class, 'homeIndex']);
 
 Route::prefix('items')->middleware('auth')->group(function () {
     Route::get('/', [App\Http\Controllers\ItemController::class, 'index'])->name('items');

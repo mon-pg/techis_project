@@ -42,8 +42,9 @@ td a{
 }
 
 /* 検索窓 */
+
 .form-wrapper {
-    max-width: 800px;
+    max-width: 800px !important;
 }
 .keyword {
     width: 60% !important; 
@@ -51,27 +52,29 @@ td a{
 }
 .search-content {
     display: flex; 
-    flex-wrap: nowrap;
-    align-items: center; 
-    gap: 0.1rem;
-    margin-bottom: 0.5rem;
+    flex-wrap: nowrap ;
+    align-items: center ; 
+    gap: 0.1rem ;
+    margin-bottom: 0.5rem ;
 }
 .search-content p {
-    margin: 0; /* デフォルトの余白をリセット */
+    margin: 0 ; /* デフォルトの余白をリセット */
 }
 .search-content .checkbox {
     display: flex; 
     align-items: center; 
+    text-align: center;
     gap: 0.1rem; /* チェックボックスとラベルの間にスペースを追加 */
     margin-right: 0.2rem; 
+}
+.check-label {
+   font-weight: normal !important;
+   margin: 0 !important;
 }
 .form-control{
     background: #ffffff !important;
 }
-.form-select{
-    background-color: #fff !important;
-    height: fit-content !important;
-}
+
 
 /* ページネーション */
 .pagination {
