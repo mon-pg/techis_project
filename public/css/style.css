@@ -2,8 +2,11 @@
     transform: scale(1.2);
 
 }
-
+.brand-link {
+    text-decoration: none;
+}
 td a{
+    text-decoration: none;
     color: rgb(119, 119, 194);
     font-weight: bold;
 }
@@ -42,7 +45,10 @@ td a{
 }
 
 /* 検索窓 */
-
+.error-msg-search{
+    color: rgb(251, 48, 48);
+    margin: 0;
+}
 .form-wrapper {
     max-width: 800px !important;
 }
@@ -67,10 +73,14 @@ td a{
     gap: 0.1rem; /* チェックボックスとラベルの間にスペースを追加 */
     margin-right: 0.2rem; 
 }
-.check-label {
-   font-weight: normal !important;
-   margin: 0 !important;
+.form-select{
+    background-color: #fff !important;
+    height: fit-content !important;
 }
+.check-label {
+    font-weight: normal !important;
+    margin: 0 !important;
+ }
 .form-control{
     background: #ffffff !important;
 }

@@ -1,12 +1,12 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'StockShelf')
 
 @section('content_header')
 @stop
 
 @section('content')
-    <p class="h2">商品検索</p>
+    <p class="h2 pt-3">商品検索</p>
     @include('item.search')
     <p class="h2">在庫状況</p>
         @if(isset($items) && count($items) > 0)
@@ -73,7 +73,6 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 @stop

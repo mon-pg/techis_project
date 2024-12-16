@@ -1,4 +1,4 @@
-<form action="{{ url('/items/search') }}" method="get" class="d-flex flex-wrap gap-2 mb-3">
+<form action="{{ url('/items/search') }}" method="get" class="d-flex flex-wrap gap-2 mb-3 ps-2">
             @csrf       
             <div class="flex-grow-3">
                 <input class="form-control mb-3 mr-3 keyword" type="search" name="sKeywords" placeholder="キーワード　検索"

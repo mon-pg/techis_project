@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', '商品編集')
+@section('title', 'StockShelf')
 
 @section('content_header')
 <div class="text-center">
@@ -128,7 +128,6 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 @stop

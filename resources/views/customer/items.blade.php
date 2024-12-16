@@ -46,10 +46,10 @@
 
         <main class="py-4 w-100">
         @if(empty($noItem))
-        <div class="main-area container">
-                <h1>商品検索</h1>
-                @include('customer.search')
-        </div>
+            <div class="main-area container">
+                    <h1>商品検索</h1>
+                    @include('customer.search')
+            </div>
             <div class="container">
             @if(empty($findNoItem))
                 <div class="card-area d-flex flex-wrap gap-5">

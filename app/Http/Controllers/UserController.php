@@ -72,7 +72,7 @@ class UserController extends Controller
 
         if(empty($sKeywords)&&empty($sRole)&&empty($sDepartment)){   //検索内容が空の場合
             $searchError = '※検索項目を入力してください。';
-            $users = $users->get();
+            $users = $users->paginate(10);
             return view('user.index',compact('users', 'roles', 'departments', 'auth_user', 'searchError'));
         }else{
 
