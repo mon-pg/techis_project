@@ -350,9 +350,11 @@ class ItemController extends Controller
      */
     public function destroy(Request $request,Item $item){
         if($item !== null){
+        Log::where('target_type', 'Item')->where('target_id', $item->id)->delete();
         Item::destroy($item->id);
         }
         if($request !== null){
+        Log::where('target_type', 'Item')->whereIn('target_id', $request->id)->delete();
         Item::destroy($request->id);
         }
         return redirect()->route('items');
