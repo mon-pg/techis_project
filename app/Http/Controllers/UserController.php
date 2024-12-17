@@ -210,12 +210,20 @@ class UserController extends Controller
         $departments = $this->departments();
         $targets = $this->target('User');
         $logs = Log::where('target_type', 'user')->where('target_id',$user->id)->get();
-        $users = [];
             foreach($logs as $log){
-                $users[$log->id] =  User::where('id', $log->user_id)->pluck('name', 'id');
+                $decoded_actions = json_decode($log->action);
+                $actions = [];
+                foreach($decoded_actions as $action){
+                    $actions[] = $targets[$action];
+                }
+                $log->action = $actions;
+            }
+        $logUsers = [];
+            foreach($logs as $log){
+                $logUsers[$log->id] =  User::where('id', $log->user_id)->pluck('name', 'id');
             }
 
-        return view('user.edit',compact('user', 'roles', 'departments', 'targets', 'auth_user', 'logs', 'users'));
+        return view('user.edit',compact('user', 'roles', 'departments', 'targets', 'auth_user', 'logs', 'logUsers'));
     }
     /**
      * ログの作成
@@ -226,22 +234,24 @@ class UserController extends Controller
         unset($validatedData['memo']);
         foreach($validatedData as $key => $value){
             if($user->getOriginal($key) != $value){
-                
-                $logs[] = [
-                    'user_id' => Auth::id(),
-                    'target_type' => 'User',
-                    'target_id' => $user->id,
-                    'action' => $key,
-                    'before_value' => $user->getOriginal($key),
-                    'after_value' => $value,
-                    'memo' => $memo,
-                    'created_at' => now(),
-                    'updated_at' => now(),               
-                ];
+                $actions[] = $key;
+                $before_values[$key] = $user->getOriginal($key);
+                $after_values[$key] = $value;   
             } 
         }
+        if(!empty($actions)){
+            $logs[] = [
+                'user_id' => Auth::id(),
+                'target_type' => 'User',
+                'target_id' => $user->id,
+                'action' => json_encode($actions),
+                'before_value' => json_encode($before_values),
+                'after_value' => json_encode($after_values),
+                'memo' => $memo,
+                'created_at' => now(),
+                'updated_at' => now(),               
+            ];
 
-        if(!empty($logs)) {
             Log::insert($logs);
         }
 

@@ -66,7 +66,9 @@
                         <p>
                             {{ $logUsers[$log->id][$log->user_id] }}さんが、
                             <a href="{{ url('/items/'.$log->target_id) }}">『{{ $logItems[$log->id][$log->target_id] }}』</a>
-                            の{{ $targets[$log->action] }}を変更しました。
+                            の
+                            {{ implode('・', $log->action) }}
+                            を変更しました。
                         </p>
                     </div>
                 </div>

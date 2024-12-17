@@ -98,6 +98,16 @@ class ItemController extends Controller
         $targets = $this->target('Item');
         $auth_user = Auth::user();
         $logs = Log::where('target_type', 'item')->orderBy('id', 'desc')->get();
+            foreach($logs as $log){
+                $decoded_actions = json_decode($log->action);
+                $actions = [];
+                foreach($decoded_actions as $action){
+                    $actions[] = $targets[$action];
+                    
+                }
+                $log->action = $actions;
+            }
+            //dd([$actions, $log->action]);
         $logUsers = [];
         $logItems = [];
             foreach($logs as $log){
@@ -264,14 +274,22 @@ class ItemController extends Controller
         $auth_user = Auth::user();
         $types = $this->type();
         $sales = $this->salesStatus();
-        $targets = $this->target();
+        $targets = $this->target('Item');
         $logs = Log::where('target_type', 'Item')->where('target_id',$item->id)->orderBy('id', 'desc')->get();
-        $users = [];
             foreach($logs as $log){
-                $users[$log->id] =  User::where('id', $log->user_id)->pluck('name', 'id');
+                $decoded_actions = json_decode($log->action);
+                $actions = [];
+                foreach($decoded_actions as $action){
+                    $actions[] = $targets[$action];
+                }
+                $log->action = $actions;
+            }
+        $logUsers = [];
+            foreach($logs as $log){
+                $logUsers[$log->id] =  User::where('id', $log->user_id)->pluck('name', 'id');
             }
   
-        return view('item.edit', compact('item', 'auth_user', 'types', 'sales', 'users', 'logs', 'targets'));
+        return view('item.edit', compact('item', 'auth_user', 'types', 'sales', 'logUsers', 'logs', 'targets'));
     }
     /**
      * 商品詳細画面
@@ -302,21 +320,25 @@ class ItemController extends Controller
                 $value = new DateTime($value);
             }
             if($item->getOriginal($key) != $value){
-                
-                $logs[] = [
+                $actions[] = $key;
+                $before_values[$key] = $item->getOriginal($key);
+                $after_values[$key] = $value;   
+            } 
+        }
+        if(!empty($actions)){
+            $logs[] = [
                     'user_id' => Auth::id(),
                     'target_type' => 'Item',
                     'target_id' => $item->id,
-                    'action' => $key,
-                    'before_value' => $item->getOriginal($key),
-                    'after_value' => $value,
+                    'action' => json_encode($actions),
+                    'before_value' => json_encode($before_values),
+                    'after_value' => json_encode($after_values),
                     'memo' => $memo,
                     'created_at' => now(),
                     'updated_at' => now(),               
                 ];
-            } 
+                //dd($logs);
         }
-
         if(!empty($logs)) {
             Log::insert($logs);
         }
