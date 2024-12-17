@@ -1,8 +1,5 @@
     <form action="{{ url('/view/items/search') }}" method="get" class="container form-wrapper">
         @csrf
-        @if(!empty($searchError))
-            <p>{{ $searchError }}</p>
-        @endif
         <div class="d-flex flex-wrap gap-2 mb-3">
             <div class="search-area flex-grow-3 ">
                 <input class="form-control mb-3 keyword" type="search" name="sKeywords" placeholder="キーワード　検索"

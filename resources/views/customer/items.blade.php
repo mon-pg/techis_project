@@ -47,7 +47,10 @@
         <main class="py-4 w-100">
         @if(empty($noItem))
             <div class="main-area container">
-                    <h1>商品検索</h1>
+                    <h1>商品一覧</h1>
+                    @if(isset($searchError))
+                        <p class="error-msg-search container">{{ $searchError }}</p>
+                    @endif
                     @include('customer.search')
             </div>
             <div class="container">

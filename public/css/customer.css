@@ -72,6 +72,10 @@ td a{
     justify-content: center;
 }
 /* 検索窓 */
+.error-msg-search{
+    color: rgb(251, 48, 48);
+    margin-bottom: 0;
+}
 .form-wrapper {
     max-width: 800px;
 }
