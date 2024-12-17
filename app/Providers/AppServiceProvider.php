@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,8 +23,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-        if(\App::environment(['production'])) {
-            \URL::forseScheme('https');
-        }
+        if (App::environment(['production']) || App::environment(['develop'])) {
+            URL::forceScheme('https');
+        };
     }
 }
