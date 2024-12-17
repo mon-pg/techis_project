@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ItemRequest;
 use App\Models\Item;
 use App\Models\Log;
+use App\Models\User;
 use Carbon\Carbon;
+use DateTime;
 
 class ItemController extends Controller
 {
@@ -20,6 +22,7 @@ class ItemController extends Controller
     {
         $this->middleware('auth');
     }
+
     /**
      * ジャンル取得
      */
@@ -46,6 +49,32 @@ class ItemController extends Controller
         return $sales;
     }
     /**
+     * 変更箇所取得
+     */
+    public function target($target_type){
+        if($target_type === 'Item'){
+            $targets = [
+            'name' => 'タイトル',
+            'type' => 'ジャンル',
+            'salesStatus' => '販売状況',
+            'salesDate' => '発売日',
+            'stock' => '在庫数',
+            'sdStock' => '基準在庫数',
+            'detail' => '商品紹介',            
+            ];
+        }elseif($target_type === 'User'){
+            $targets = [
+                'name' => '氏名',
+                'role' => '権限',
+                'department' => '部署',
+                'email' => 'メールアドレス',
+            ];
+        }
+
+        return $targets;
+    }
+
+    /**
      * 商品一覧
      */
     public function index()
@@ -66,10 +95,25 @@ class ItemController extends Controller
         $items = Item::find($this->stockIds());
         $types = $this->type();
         $sales = $this->salesStatus();
+        $targets = $this->target('Item');
         $auth_user = Auth::user();
-        $logs = Log::where('target_type', 'item')->get();
+        $logs = Log::where('target_type', 'item')->orderBy('id', 'desc')->get();
+        $logUsers = [];
+        $logItems = [];
+            foreach($logs as $log){
+                $logUsers[$log->id] =  User::where('id', $log->user_id)->pluck('name', 'id');
+                $logItems[$log->id] =  Item::where('id', $log->target_id)->pluck('name', 'id');
+            }
 
-        return view('item.home', compact('items', 'types', 'sales', 'auth_user'));
+        return view('item.home', compact(
+            'items',
+            'types', 
+            'sales', 
+            'targets', 
+            'auth_user', 
+            'logs', 
+            'logUsers',
+            'logItems'));
     }
     /**
      * 在庫不足のitemIDの取得
@@ -205,19 +249,14 @@ class ItemController extends Controller
      * 商品編集
      */
     public function edit(ItemRequest $request, Item $item)
-    {
-            // 商品更新
-            $item->update([
-                'user_id' => Auth::user()->id,
-                'name' => $request->name,
-                'type' => $request->type,
-                'salesStatus' => $request->salesStatus,
-                'salesDate' => $request->salesDate,
-                'stock' => $request->stock,
-                'sdStock' => $request->sdStock,
-                'detail' => $request->detail,
-            ]);
-
+    {   
+        //バリデーション
+            $data = $request->validated();
+        //ログを作成
+            $this->log($data, $item);            
+        //更新
+            $item->fill($data)->save();
+            
             return redirect('/items');
         
     }
@@ -225,14 +264,14 @@ class ItemController extends Controller
         $auth_user = Auth::user();
         $types = $this->type();
         $sales = $this->salesStatus();
-        $logs = Log::where('target_type', 'item')->where('target_id',$item->id)->get();
-
-        return view('item.edit',[
-             'item' => $item,
-             'auth_user' => $auth_user,
-             'types' => $types,  
-             'sales' => $sales, 
-             'logs' => $logs]);
+        $targets = $this->target();
+        $logs = Log::where('target_type', 'Item')->where('target_id',$item->id)->orderBy('id', 'desc')->get();
+        $users = [];
+            foreach($logs as $log){
+                $users[$log->id] =  User::where('id', $log->user_id)->pluck('name', 'id');
+            }
+  
+        return view('item.edit', compact('item', 'auth_user', 'types', 'sales', 'users', 'logs', 'targets'));
     }
     /**
      * 商品詳細画面
@@ -241,16 +280,49 @@ class ItemController extends Controller
         $auth_user = Auth::user();
         $types = $this->type();
         $sales = $this->salesStatus();
-        $logs = Log::where('target_type', 'item')->where('target_id',$item->id)->get();
-
-        return view('item.detail',[
-             'item' => $item,
-             'auth_user' => $auth_user,
-             'types' => $types,  
-             'sales' => $sales, 
-             'logs' => $logs]);
+        $targets = $this->target();
+        $logs = Log::where('target_type', 'Item')->where('target_id',$item->id)->orderBy('id', 'desc')->get();
+        $users = [];
+            foreach($logs as $log){
+                $users[$log->id] =  User::where('id', $log->user_id)->pluck('name', 'id');
+            }
+  
+        return view('item.detail', compact('item', 'auth_user', 'types', 'sales', 'users', 'logs', 'targets'));
     }
+    /**
+     * ログ作成
+     */
+    public function log($validatedData, Item $item){
+        $logs = [];
+        $memo = $validatedData['memo'] ?? null;
+        unset($validatedData['memo']);
+        foreach($validatedData as $key => $value){
+            if( $key === 'salesDate'){
+                // 編集formのsalesDateをDate型からDateTime型に変換
+                $value = new DateTime($value);
+            }
+            if($item->getOriginal($key) != $value){
+                
+                $logs[] = [
+                    'user_id' => Auth::id(),
+                    'target_type' => 'Item',
+                    'target_id' => $item->id,
+                    'action' => $key,
+                    'before_value' => $item->getOriginal($key),
+                    'after_value' => $value,
+                    'memo' => $memo,
+                    'created_at' => now(),
+                    'updated_at' => now(),               
+                ];
+            } 
+        }
 
+        if(!empty($logs)) {
+            Log::insert($logs);
+        }
+
+        return;
+    }
     /**
      * 商品削除
      */

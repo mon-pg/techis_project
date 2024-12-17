@@ -29,6 +29,7 @@ class ItemRequest extends FormRequest
             'detail' => 'nullable|max:300',
             'stock' => 'required',
             'sdStock' => 'required',
+            'memo' => 'max:50',
         ];
     }
      /**

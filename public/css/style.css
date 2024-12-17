@@ -90,3 +90,14 @@ td a{
 .pagination {
     margin-bottom: 0 !important;
 }
+
+/* ログ */
+.log-area {
+    width: 100%;
+    border-bottom: solid 1px rgb(95, 95, 95);
+    margin-bottom: 0.5rem;
+    padding: 0 0.5rem 0.2rem 0.5rem;
+}
+.log-area p{
+    margin: 0;
+}

@@ -56,18 +56,27 @@
             <p>現在、在庫が不足している商品はありません。</p>
         @endif
     <p class="h2">更新ログ</p>
-        @if(isset($logs) && count($logs) > 0)
-            <table>
+        <div class="">
+            @if(isset($logs) && count($logs)>0)
+            <div class="d-flex flex-column">
                 @foreach($logs as $log)
-                <tr>
-                    <td>{{ $log->created_at }}</td>
-                    <td><p>{{ $log->user_id }}が{{ $log->target_id }}を変更しました。</p></td>
-                </tr>
+                <div class="d-flex flex-wrap gap-2 log-area">
+                    <div class="align-self-start">{{ $log->created_at->format('Y/m/d') }}</div>
+                    <div class="flex-grow-1">
+                        <p>
+                            {{ $logUsers[$log->id][$log->user_id] }}さんが、
+                            <a href="{{ url('/items/'.$log->target_id) }}">『{{ $logItems[$log->id][$log->target_id] }}』</a>
+                            の{{ $targets[$log->action] }}を変更しました。
+                        </p>
+                    </div>
+                </div>
                 @endforeach
-            </table>
-        @else
-            <p>現在、表示するログはありません。</p>
-        @endif
+            </div>
+            @else
+            <p>ログがありません。</p>
+            @endif
+        </div>
+        
 
 
 @stop

@@ -45,6 +45,31 @@ class UserController extends Controller
         ];
         return $departments;
     }
+    /**
+     * 変更箇所取得
+     */
+    public function target($target_type){
+        if($target_type === 'Item'){
+            $targets = [
+            'name' => 'タイトル',
+            'type' => 'ジャンル',
+            'salesStatus' => '販売状況',
+            'salesDate' => '発売日',
+            'stock' => '在庫数',
+            'sdStock' => '基準在庫数',
+            'detail' => '商品紹介',            
+            ];
+        }elseif($target_type === 'User'){
+            $targets = [
+                'name' => '氏名',
+                'role' => '権限',
+                'department' => '部署',
+                'email' => 'メールアドレス',
+            ];
+        }
+
+        return $targets;
+    }
 
     /**
      * ユーザー一覧
@@ -149,8 +174,8 @@ class UserController extends Controller
                 $updateData['department'] = $departments[$i];
             }
             if(!empty($updateData['role']) || !empty($updateData['department'])){
-                $target->update($updateData);
-                
+                $this->log($updateData, $target);
+                $target->update($updateData);    
             }
         }
 
@@ -164,45 +189,65 @@ class UserController extends Controller
         // POSTリクエストのとき
         if ($request->isMethod('post')) {
             // バリデーション
-            $request->validate([
+            $data = $request->validate([
                 'id' => 'required',
                 'name' => 'required',
                 'role' => 'required',
+                'department' => 'nullable',
                 'email' => 'required|email',
+                'memo' => 'max:50',
             ]);
 
-            if(!empty($request->department)){
-                // ユーザー情報更新
-                $user->update([
-                    'role' => $request->role,
-                    'department' => $request->department,
-                    'email' => $request->email,
-                ]);
-            }else{
-                $user->update([
-                    'role' => $request->role,
-                    'email' => $request->email,
-                ]);
-            }
+            $this->log($data, $user);
 
-            $logs = Log::where('target_type', 'user')->where('target_id',$user->id)->get();
+            $user->fill($data)->save();
+            
             return redirect('/users');
         }
 
         $auth_user = Auth::user();
         $roles = $this->roles();
         $departments = $this->departments();
+        $targets = $this->target('User');
+        $logs = Log::where('target_type', 'user')->where('target_id',$user->id)->get();
+        $users = [];
+            foreach($logs as $log){
+                $users[$log->id] =  User::where('id', $log->user_id)->pluck('name', 'id');
+            }
 
-        return view('user.edit',compact('user', 'roles', 'departments', 'auth_user'));
+        return view('user.edit',compact('user', 'roles', 'departments', 'targets', 'auth_user', 'logs', 'users'));
     }
     /**
      * ログの作成
      */
-    public function log($type, $request){
-        
-        return true;
+    public function log($validatedData, User $user){
+        $logs = [];
+        $memo = $validatedData['memo'] ?? null;
+        unset($validatedData['memo']);
+        foreach($validatedData as $key => $value){
+            if($user->getOriginal($key) != $value){
+                
+                $logs[] = [
+                    'user_id' => Auth::id(),
+                    'target_type' => 'User',
+                    'target_id' => $user->id,
+                    'action' => $key,
+                    'before_value' => $user->getOriginal($key),
+                    'after_value' => $value,
+                    'memo' => $memo,
+                    'created_at' => now(),
+                    'updated_at' => now(),               
+                ];
+            } 
+        }
 
+        if(!empty($logs)) {
+            Log::insert($logs);
+        }
+
+        return;
     }
+
     /**
      * ユーザーの論理削除
      */

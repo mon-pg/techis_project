@@ -54,7 +54,6 @@
                 <form method="POST">
                     @csrf
                     <div class="card-body">
-                        <input type="hidden" name="user_id" id="user_id" value="{{ $auth_user->id }}" >
                         <div class="form-group">
                             <div class="d-inline-flex"><label for="name">タイトル</label><p class="validation-mark align-self-start">*</p></div>
                             <input type="text" class="form-control" id="name" name="name" placeholder="タイトル" value="{{ old('name', $item->name) }}">
@@ -80,14 +79,14 @@
                                 <option value="2">生産終了</option>                                
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group d-flex">
                             <div class="d-inline-flex"><label for="">発売日</label><p class="validation-mark align-self-start">*</p></div>
                             <input type="date" class="form-control" id="salesDate" name="salesDate" value="{{ old('salesDate', $item->salesDate ? $item->salesDate->format('Y-m-d') : '') }}">
                         </div>
 
                         <div class="form-group">
                             <label for="detail">商品紹介</label>
-                            <input type="text" class="form-control" id="detail" name="detail" placeholder="商品紹介" value="{{ old('detail', $item->detail) }}">
+                            <input type="textarea" class="form-control" id="detail" name="detail" placeholder="商品紹介" value="{{ old('detail', $item->detail) }}">
                         </div>
 
                         
@@ -113,16 +112,46 @@
                             </div>
                             @endif
                         </div>
+                        
                     </div>
 
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">更新</button>
-                        @if($auth_user->role == 1)
-                        <a href="#" class="btn btn-danger btn-delete-confirm" data-toggle="modal" data-target="#deleteModal" data-url="{{ url('/items/delete/'.$item->id) }}" data-id="{{ $item->id }}" > 削除 </a>
-                        @endif
+                    <div class="card-footer d-flex flex-column-reverse">
+                        <div class="d-flex form-group">
+                            <label for="memo">メモ</label>
+                            <input type="text" name="memo" id="memo" class="form-control" placeholder="特記事項があれば入力" value="{{ old('memo') }}">
+                        </div>
+                        <div class="btns">
+                            <button type="submit" class="btn btn-primary">更新</button>
+                            @if($auth_user->role == 1)
+                            <a href="#" class="btn btn-danger btn-delete-confirm" data-toggle="modal" data-target="#deleteModal" data-url="{{ url('/items/delete/'.$item->id) }}" data-id="{{ $item->id }}" > 削除 </a>
+                            @endif
+                        </div>
+                        
                     </div>
                 </form>
             </div>
+
+            <h2>更新ログ</h2>
+            <div class="container">
+                @if(isset($logs) && count($logs)>0)
+                <div class="d-flex flex-column">
+                    @foreach($logs as $log)
+                    <div class="d-flex flex-wrap gap-2 log-area">
+                        <div class="align-self-start">{{ $log->created_at->format('Y/m/d') }}</div>
+                        <div class="flex-grow-1">
+                            <p>{{ $users[$log->id][$log->user_id] }}さんが、{{ $targets[$log->action] }}を変更しました。</p>
+                            @if(isset($log->memo))
+                            <p>メモ：{{ $log->memo }}</p>
+                            @endif
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+                @else
+                <p>ログがありません。</p>
+                @endif
+            </div>
+            
         </div>
     </div>
 @stop
