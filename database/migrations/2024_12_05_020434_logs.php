@@ -16,9 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id'); // 操作したユーザーのID
             $table->string('target_type'); // 編集対象の種類 (例: 'user', 'item')
             $table->unsignedBigInteger('target_id')->nullable(); // 操作対象のID
-            $table->string('action'); // 編集内容 (例: 'update_role', 'update_item')
-            $table->text('before_value')->nullable(); // 変更前の値
-            $table->text('after_value')->nullable(); // 変更後の値
+            $table->json('action'); // 編集内容 (例: 'update_role', 'update_item')
+            $table->json('before_value')->nullable(); // 変更前の値
+            $table->json('after_value')->nullable(); // 変更後の値
             $table->string('memo', 100)->nullable(); // 補足情報
             $table->timestamps();
         });

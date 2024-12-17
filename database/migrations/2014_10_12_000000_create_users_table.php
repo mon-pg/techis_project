@@ -17,7 +17,7 @@ return new class extends Migration
             $table->tinyInteger('status')->default(1)->comment('状態 1=active, 0=deleted'); 
             $table->tinyInteger('role')->default(3)->comment('権限 1=管理者, 2=編集者, 3=閲覧者, 4=停止');
             $table->tinyInteger('department')->nullable()->comment('部署 1=商品管理部, 2=営業部, 3=商品開発部, 4=その他');
-            $table->string('email')->unique();
+            $table->string('email')->charset('utf8')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
