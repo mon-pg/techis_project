@@ -299,7 +299,7 @@ class ItemController extends Controller
         $auth_user = Auth::user();
         $types = $this->type();
         $sales = $this->salesStatus();
-        $targets = $this->target();
+        $targets = $this->target('Item');
         $logs = Log::where('target_type', 'Item')->where('target_id',$item->id)->orderBy('id', 'desc')->get();
         $users = [];
             foreach($logs as $log){
