@@ -98,6 +98,7 @@ class ItemController extends Controller
         $targets = $this->target('Item');
         $auth_user = Auth::user();
         $logs = Log::where('target_type', 'item')->orderBy('id', 'desc')->get();
+        //dd($logs);
             foreach($logs as $log){
                 $decoded_actions = json_decode($log->action);
                 $actions = [];
@@ -114,7 +115,7 @@ class ItemController extends Controller
                 $logUsers[$log->id] =  User::where('id', $log->user_id)->pluck('name', 'id');
                 $logItems[$log->id] =  Item::where('id', $log->target_id)->pluck('name', 'id');
             }
-
+            
         return view('item.home', compact(
             'items',
             'types', 
@@ -349,11 +350,14 @@ class ItemController extends Controller
      * 商品削除
      */
     public function destroy(Request $request,Item $item){
+        
         if($item !== null){
+        Log::where('target_type', 'Item')->where('target_id', $item->id)->delete();
         Item::destroy($item->id);
         }
         if($request !== null){
-        Item::destroy($request->id);
+            Log::where('target_type', 'Item')->whereIn('target_id', $request->input('id'))->delete();   
+            Item::destroy($request->id);
         }
         return redirect()->route('items');
     }
