@@ -57,7 +57,7 @@
         @endif
     <p class="h2">更新ログ</p>
         <div class="">
-            @if(isset($logs) && count($logs)>0)
+            @if(!empty($logs) && count($logs)>0)
             <div class="d-flex flex-column">
                 @foreach($logs as $log)
                 <div class="d-flex flex-wrap gap-2 log-area">
