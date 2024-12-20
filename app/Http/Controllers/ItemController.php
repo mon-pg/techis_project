@@ -10,6 +10,7 @@ use App\Models\Log;
 use App\Models\User;
 use Carbon\Carbon;
 use DateTime;
+use Hamcrest\Arrays\IsArray;
 
 class ItemController extends Controller
 {
@@ -355,10 +356,11 @@ class ItemController extends Controller
         Log::where('target_type', 'Item')->where('target_id', $item->id)->delete();
         Item::destroy($item->id);
         }
-        if($request !== null){
+        if(is_array($request->input('id'))){
             Log::where('target_type', 'Item')->whereIn('target_id', $request->input('id'))->delete();   
             Item::destroy($request->id);
         }
+
         return redirect()->route('items');
     }
     
