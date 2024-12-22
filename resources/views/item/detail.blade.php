@@ -77,7 +77,7 @@
                         <div class="align-self-start">{{ $log->created_at->format('Y/m/d') }}</div>
                         <div class="flex-grow-1">
                             <p>
-                                {{ $logUsers[$log->id][$log->user_id] }}さんが、
+                                {{ $logUsers[$log->id] }}さんが、
                                 {{ implode('・', $log->action) }}
                                 を変更しました。
                             </p>
