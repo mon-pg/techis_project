@@ -25,14 +25,6 @@ td a{
 .validation-mark{
     color: red ;
 }
-.detail-area{
-    border: 1px solid #ddd;
-    padding: 8px;
-    max-width: 200px; /* 最大幅を設定 */
-    white-space: nowrap; /* テキストを折り返さない */
-    overflow: hidden; /* はみ出たテキストを隠す */
-    text-overflow: ellipsis; /* はみ出た部分に省略記号を表示 */
-}
 
 /* 戻るボタン */
 .btn-back {
