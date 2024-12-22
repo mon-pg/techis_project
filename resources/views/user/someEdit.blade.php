@@ -6,7 +6,7 @@
 <div class="text-center">
     <div class="row">
         <div class="col col-sm-auto">
-            <a href="{{ url('/users/index') }}" class="btn-back">戻る</a>
+            <a href="{{ url('/users') }}" class="btn-back">戻る</a>
         </div>
         <h1 class="col-md-auto">一括編集</h1>
     </div>
@@ -29,7 +29,7 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>名前</th>
+                                <th>氏名</th>
                                 <th>権限</th>
                                 <th>部署</th>
                                 <th>メールアドレス</th>

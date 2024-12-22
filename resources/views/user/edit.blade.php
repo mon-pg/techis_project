@@ -58,7 +58,7 @@
                     <div class="card-body">
                         <input type="hidden" name="id" value="{{ $user->id }}">
                         <div class="form-group">
-                            <p>名前：{{ $user->name }}</p>
+                            <p>氏名：{{ $user->name }}</p>
                             <input type="hidden" class="form-control" id="name" name="name" value="{{ $user->name }}">
                         </div>
                     

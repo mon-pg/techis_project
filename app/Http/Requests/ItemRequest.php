@@ -22,7 +22,7 @@ class ItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:100',
+            'title' => 'required|max:100',
             'type' => 'required',
             'salesStatus' => 'required',
             'salesDate' => 'nullable|date',

@@ -12,6 +12,8 @@ td a{
     cursor: pointer;
 }
 
+
+
 /* 一覧チェックボックス */
 .delete-check{
     transform: scale(1.2);
@@ -162,10 +164,29 @@ form p{
 }
 
 /* ログ */
+.logs-area {
+    overflow-y: auto;
+    height: 10rem;
+    width: 100%;
+    max-width: 60rem;
+}
+.logs-area::-webkit-scrollbar {
+    width: 0.3rem;
+    background: #b1b1b1;
+    border-radius: 10px;
+  }
+.logs-area::-webkit-scrollbar-thumb {
+    background-color: #717171;
+
+    border-radius: 10px;
+  }
+.logs-area::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(255, 255, 255);
+  }
 .log-area {
     width: 100%;
     max-width: 60rem;
-    border-bottom: solid 1px rgb(95, 95, 95);
+    border-bottom: solid 1px rgb(222, 222, 222);
     margin-bottom: 0.5rem;
     padding: 0 0.5rem 0.2rem 0.5rem;
 }

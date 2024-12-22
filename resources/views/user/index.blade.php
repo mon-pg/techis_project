@@ -42,7 +42,7 @@
                                     </th>
                                     @endif
                                     <th>ID</th>
-                                    <th>名前</th>
+                                    <th>氏名</th>
                                     <th>権限</th>
                                     <th>部署</th>
                                     <th>メールアドレス</th>

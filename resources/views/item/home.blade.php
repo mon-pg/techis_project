@@ -58,7 +58,7 @@
     <p class="h2">更新ログ</p>
         <div class="">
             @if(!empty($logs) && count($logs)>0)
-            <div class="d-flex flex-column">
+            <div class="logs-area d-flex flex-column">
                 @foreach($logs as $log)
                 <div class="d-flex flex-wrap gap-2 log-area">
                     <div class="align-self-start">{{ $log->created_at->format('Y/m/d') }}</div>
