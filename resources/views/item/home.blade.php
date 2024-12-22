@@ -64,7 +64,7 @@
                     <div class="align-self-start">{{ $log->created_at->format('Y/m/d') }}</div>
                     <div class="flex-grow-1">
                         <p>
-                            {{ $logUsers[$log->id][$log->user_id] }}さんが、
+                            {{ $logUsers[$log->id] }}さんが、
                             <a href="{{ url('/items/'.$log->target_id) }}">『{{ $logItems[$log->id][$log->target_id] }}』</a>
                             の
                             {{ implode('・', $log->action) }}

@@ -89,7 +89,7 @@
         </div>
     @endif
     @if(isset($noUser))                    
-            <p>{{$noUser}}</p>
+            <h4 class="ms-2">{{$noUser}}</h4>
     @endif
 @stop
 

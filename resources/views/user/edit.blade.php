@@ -120,13 +120,13 @@
             <h2>更新ログ</h2>
             <div class="container">
                 @if(isset($logs) && count($logs)>0)
-                <div class="d-flex flex-column">
+                <div class="logs-area d-flex flex-column">
                     @foreach($logs as $log)
                     <div class="d-flex flex-wrap gap-2 log-area">
                         <div class="align-self-start">{{ $log->created_at->format('Y/m/d') }}</div>
                         <div class="flex-grow-1">
                             <p>
-                                {{ $logUsers[$log->id][$log->user_id] }}さんが、
+                                {{ $logUsers[$log->id] }}さんが、
                                 {{ implode('・', $log->action) }}
                                 を変更しました。
                             </p>
