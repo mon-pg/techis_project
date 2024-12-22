@@ -31,13 +31,13 @@
                 <form method="POST">
                     @csrf
                     <div class="card-body">
-                        <div class="form-group">
-                            <label for="name">タイトル</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="タイトル" value="{{ old('name') }}">
+                        <div class="form-group-clm">
+                            <div class="form-title"><label class="form-label" for="title">タイトル</label><p class="validation-mark align-self-start">*</p></div>
+                            <input type="text" class="form-control form-text" id="title" name="title" placeholder="タイトルを入力" value="{{ old('title') }}">
                         </div>
 
-                        <div class="form-group d-flex">
-                            <label for="type">ジャンル</label>
+                        <div class="form-group-row ">
+                            <div class="form-title"><label class="form-label" for="">ジャンル</label><p class="validation-mark align-self-start">*</p></div>
                             <select class="form-select" id="type" name="type">
                                 <option disabled {{ old('type') === null ? 'selected' : '' }}>ジャンルを選択</option>
                                 <option value="1" {{ old('type') == 1 ? 'selected' : '' }}>RPG</option>
@@ -47,8 +47,8 @@
                                 <option value="5" {{ old('type') == 5 ? 'selected' : '' }}>その他</option>
                             </select>
                         </div>
-                        <div class="form-group d-flex">
-                            <label for="salesStatus">販売状況</label>
+                        <div class="form-group-row ">
+                            <div class="form-title"><label class="form-label" for="">販売状況</label><p class="validation-mark align-self-start">*</p></div>
                             <select class="form-select" id="salesStatus" name="salesStatus">
                                 <option disabled {{ old('salesStatus') === null ? 'selected' : '' }}>販売状況を選択</option>
                                 <option value="3" {{ old('salesStatus') == 3 ? 'selected' : '' }}>発売予定</option>
@@ -56,36 +56,37 @@
                                 <option value="2" {{ old('salesStatus') == 2 ? 'selected' : '' }}>生産終了</option>                                
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="salesDate">発売日</label>
-                            <input type="date" class="form-control" id="salesDate" name="salesDate" value="{{ old('salesDate') }}">
+                        <div class="form-group-row">
+                            <div class="form-title"><label class="form-label" for="">発売日</label><p class="validation-mark align-self-start">*</p></div>
+                            <input type="date" class="form-control form-date" id="salesDate" name="salesDate" value="{{ old('salesDate') }}">
                         </div>
 
-                        <div class="form-group">
-                            <label for="detail">商品紹介</label>
-                            <input type="text" class="form-control" id="detail" name="detail" placeholder="商品紹介" value="{{ old('detail') }}">
+                        <div class="form-group-clm">
+                            <div class="form-title"><label class="form-label" for="detail">商品紹介</label></div>
+                            <textarea class="form-control form-text" name="detail" id="detail" placeholder="商品紹介文を入力">{{ old('detail') }}</textarea>
+                        
                         </div>
 
                         
-                        <div class="d-flex gap-1">
-                            <div class="form-group d-flex">
-                                <label for="stock">在庫数</label>
-                                <input type="text" class="form-control" id="stock" name="stock" placeholder="0" value="{{ old('stock') }}">
-                                <p>個</p>
+                        <div class="stock-form">
+                            <div class="form-group-row">
+                                <div class="stock-title"><label class="form-label" for="detail">在庫数</label><p class="validation-mark align-self-start">*</p></div>
+                                <input type="text" class="form-control stock-num" id="stock" name="stock" placeholder="0" value="{{ old('stock') }}">
+                                <p class="stock-unit">個</p>
                             </div>
 
                             @if($auth_user->role === 1)
-                            <div class="form-group d-inline-flex">
-                                <label for="sdStock">基準在庫数</label>
-                                <input type="text" class="form-control" id="sdStock" name="sdStock" value="{{ old('sdStock', 5) ?: 0 }}">
-                                <p>個</p>
+                            <div class="form-group-row d-inline-flex">
+                                <div class="stock-title"><label class="form-label" for="detail">基準在庫数</label><p class="validation-mark align-self-start">*</p></div>
+                                <input type="text" class="form-control stock-num" id="sdStock" name="sdStock" value="{{ old('sdStock', 5) ?: 0 }}">
+                                <p class="stock-unit">個</p>
                             </div>
                             @else
-                            <div class="form-group d-flex">
-                                <label for="sdStock">基準在庫数</label>
+                            <div class="form-group-row d-flex">
+                                <div class="stock-title"><label class="form-label" for="detail">基準在庫数</label></div>
                                 <input type="text" class="form-control" value="5" readonly>
-                                <input type="hidden" class="form-control" id="sdStock" name="sdStock" value="5">
-                                <p>個</p>
+                                <input type="hidden" class="form-control stock-num" id="sdStock" name="sdStock" value="5">
+                                <p class="stock-unit">個</p>
                             </div>
                             @endif
                         </div>

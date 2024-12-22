@@ -10,6 +10,7 @@ use App\Models\Log;
 use App\Models\User;
 use Carbon\Carbon;
 use DateTime;
+use Hamcrest\Arrays\IsArray;
 
 class ItemController extends Controller
 {
@@ -54,7 +55,7 @@ class ItemController extends Controller
     public function target($target_type){
         if($target_type === 'Item'){
             $targets = [
-            'name' => 'タイトル',
+            'title' => 'タイトル',
             'type' => 'ジャンル',
             'salesStatus' => '販売状況',
             'salesDate' => '発売日',
@@ -112,10 +113,17 @@ class ItemController extends Controller
         $logUsers = [];
         $logItems = [];
             foreach($logs as $log){
-                $logUsers[$log->id] =  User::where('id', $log->user_id)->pluck('name', 'id');
-                $logItems[$log->id] =  Item::where('id', $log->target_id)->pluck('name', 'id');
+                $user = User::where('id', $log->user_id)->first();
+                
+                if($user && $user->status === 1){
+                    $logUsers[$log->id] =  $user->name;
+                }else {
+                    $logUsers[$log->id] = 'ユーザー';
+                }
+                    
+                $logItems[$log->id] =  Item::where('id', $log->target_id)->pluck('title', 'id');
             }
-            
+           // dd($logUsers);
         return view('item.home', compact(
             'items',
             'types', 
@@ -209,7 +217,7 @@ class ItemController extends Controller
                 
                 $items->where(function($query) use ($keywords){
                     foreach($keywords as $keyword){
-                    $query->orWhere('name', 'LIKE', "%$keyword%")
+                    $query->orWhere('title', 'LIKE', "%$keyword%")
                             ->orWhere('detail', 'LIKE', "%$keyword%");       
                     }
                 });
@@ -243,7 +251,7 @@ class ItemController extends Controller
             // 商品登録
             Item::create([
                 'user_id' => Auth::user()->id,
-                'name' => $request->name,
+                'title' => $request->title,
                 'type' => $request->type,
                 'salesStatus' => $request->salesStatus,
                 'salesDate' => $request->salesDate,
@@ -286,9 +294,16 @@ class ItemController extends Controller
                 $log->action = $actions;
             }
         $logUsers = [];
-            foreach($logs as $log){
-                $logUsers[$log->id] =  User::where('id', $log->user_id)->pluck('name', 'id');
+        foreach($logs as $log){
+            $user = User::where('id', $log->user_id)->first();
+
+            if($user && $user->status === 1){
+                $logUsers[$log->id] =  $user->name;
+            }else {
+                $logUsers[$log->id] = 'ユーザー';
             }
+            
+        }
   
         return view('item.edit', compact('item', 'auth_user', 'types', 'sales', 'logUsers', 'logs', 'targets'));
     }
@@ -303,7 +318,14 @@ class ItemController extends Controller
         $logs = Log::where('target_type', 'Item')->where('target_id',$item->id)->orderBy('id', 'desc')->get();
         $users = [];
             foreach($logs as $log){
-                $users[$log->id] =  User::where('id', $log->user_id)->pluck('name', 'id');
+                $user = User::where('id', $log->user_id)->first();
+
+                if($user && $user->status === 1){
+                    $users[$log->id] =  $user->name;
+                }else {
+                    $users[$log->id] = 'ユーザー';
+                }
+                
             }
   
         return view('item.detail', compact('item', 'auth_user', 'types', 'sales', 'users', 'logs', 'targets'));
@@ -355,10 +377,11 @@ class ItemController extends Controller
         Log::where('target_type', 'Item')->where('target_id', $item->id)->delete();
         Item::destroy($item->id);
         }
-        if($request !== null){
+        if(is_array($request->input('id'))){
             Log::where('target_type', 'Item')->whereIn('target_id', $request->input('id'))->delete();   
             Item::destroy($request->id);
         }
+
         return redirect()->route('items');
     }
     

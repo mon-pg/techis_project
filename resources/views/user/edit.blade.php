@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'ユーザー編集')
+@section('title', 'Stock Shelf')
 
 
 @section('content_header')
@@ -58,11 +58,11 @@
                     <div class="card-body">
                         <input type="hidden" name="id" value="{{ $user->id }}">
                         <div class="form-group">
-                            <p>名前：{{ $user->name }}</p>
+                            <p>氏名：{{ $user->name }}</p>
                             <input type="hidden" class="form-control" id="name" name="name" value="{{ $user->name }}">
                         </div>
                     
-                        <div class="form-group d-flex">
+                        <div class="form-group">
                             <p>権限：</p>
                             @if($auth_user->role == 1 && $auth_user->id !== $user->id)
                                 <select class="form-select" id="role" name="role">
@@ -77,7 +77,7 @@
                             @endif
                         </div>
 
-                        <div class="form-group d-flex">
+                        <div class="form-group">
                             <p>部署：</p>
                             <select class="form-select" id="department" name="department">
                                 @if(!empty($user->department))
@@ -92,7 +92,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group d-flex">
+                        <div class="form-group-clm">
                             <p>メールアドレス：</p>
                             @if($auth_user->id === $user->id)
                             <input type="text" class="form-control" id="email" name="email" value="{{ old('email', $user->email) }}">
@@ -103,7 +103,7 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex flex-column-reverse">
-                        <div class="d-flex form-group">
+                        <div class="form-group-clm mt-1">
                             <p>メモ：</p>
                             <input type="text" name="memo" id="memo" class="form-control" placeholder="特記事項があれば入力" value="{{ old('memo') }}">
                         </div>
@@ -120,13 +120,13 @@
             <h2>更新ログ</h2>
             <div class="container">
                 @if(isset($logs) && count($logs)>0)
-                <div class="d-flex flex-column">
+                <div class="logs-area d-flex flex-column">
                     @foreach($logs as $log)
                     <div class="d-flex flex-wrap gap-2 log-area">
                         <div class="align-self-start">{{ $log->created_at->format('Y/m/d') }}</div>
                         <div class="flex-grow-1">
                             <p>
-                                {{ $logUsers[$log->id][$log->user_id] }}さんが、
+                                {{ $logUsers[$log->id] }}さんが、
                                 {{ implode('・', $log->action) }}
                                 を変更しました。
                             </p>

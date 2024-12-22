@@ -22,14 +22,14 @@ class ItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:100',
+            'title' => 'required|max:100',
             'type' => 'required',
             'salesStatus' => 'required',
             'salesDate' => 'nullable|date',
             'detail' => 'nullable|max:300',
             'stock' => 'required',
             'sdStock' => 'required',
-            'memo' => 'max:50',
+            'memo' => 'max:60',
         ];
     }
      /**

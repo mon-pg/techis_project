@@ -75,7 +75,7 @@ class UserController extends Controller
      * ユーザー一覧
      */
     public function index() {
-        $users = User::paginate(10);
+        $users = User::where('status', 1)->paginate(10);
         $auth_user = Auth::user();
         $roles = $this->roles();
         $departments = $this->departments();
@@ -86,7 +86,7 @@ class UserController extends Controller
      * ユーザー検索機能
      */
     public function search(Request $request){
-        $users = User::query();
+        $users = User::where('status', 1);  // アクティブユーザーを取得
         $auth_user = Auth::user();
         $roles = $this->roles();
         $departments = $this->departments();
@@ -100,7 +100,6 @@ class UserController extends Controller
             $users = $users->paginate(10);
             return view('user.index',compact('users', 'roles', 'departments', 'auth_user', 'searchError'));
         }else{
-
             if(!empty($sRole)){
                 $users->where('role', $sRole);
             }
@@ -193,7 +192,7 @@ class UserController extends Controller
                 'id' => 'required',
                 'name' => 'required',
                 'role' => 'required',
-                'department' => 'nullable',
+                'department' => 'required',
                 'email' => 'required|email',
                 'memo' => 'max:50',
             ]);
@@ -204,26 +203,34 @@ class UserController extends Controller
             
             return redirect('/users');
         }
-
-        $auth_user = Auth::user();
-        $roles = $this->roles();
-        $departments = $this->departments();
-        $targets = $this->target('User');
-        $logs = Log::where('target_type', 'user')->where('target_id',$user->id)->get();
-            foreach($logs as $log){
-                $decoded_actions = json_decode($log->action);
-                $actions = [];
-                foreach($decoded_actions as $action){
-                    $actions[] = $targets[$action];
+        if($user->status === 1){
+            $auth_user = Auth::user();
+            $roles = $this->roles();
+            $departments = $this->departments();
+            $targets = $this->target('User');
+            $logs = Log::where('target_type', 'user')->where('target_id',$user->id)->get();
+                foreach($logs as $log){
+                    $decoded_actions = json_decode($log->action);
+                    $actions = [];
+                    foreach($decoded_actions as $action){
+                        $actions[] = $targets[$action];
+                    }
+                    $log->action = $actions;
                 }
-                $log->action = $actions;
-            }
-        $logUsers = [];
+            $logUsers = [];
             foreach($logs as $log){
-                $logUsers[$log->id] =  User::where('id', $log->user_id)->pluck('name', 'id');
-            }
+                $logUser = User::where('id', $log->user_id)->first();
 
-        return view('user.edit',compact('user', 'roles', 'departments', 'targets', 'auth_user', 'logs', 'logUsers'));
+                if($logUser && $logUser->status === 1){
+                    $logUsers[$log->id] =  $logUser->name;
+                }else {
+                    $logUsers[$log->id] = 'ユーザー';
+                }
+            }
+            return view('user.edit',compact('user', 'roles', 'departments', 'targets', 'auth_user', 'logs', 'logUsers'));
+        }else {
+            return redirect('/users');
+        }
     }
     /**
      * ログの作成

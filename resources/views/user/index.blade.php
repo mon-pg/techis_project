@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'ユーザー管理')
+@section('title', 'Stock Shelf')
 
 @section('content_header')
     <h1>ユーザー管理一覧</h1>
@@ -42,7 +42,7 @@
                                     </th>
                                     @endif
                                     <th>ID</th>
-                                    <th>名前</th>
+                                    <th>氏名</th>
                                     <th>権限</th>
                                     <th>部署</th>
                                     <th>メールアドレス</th>
@@ -53,11 +53,11 @@
                                     <tr>
                                         
                                         @if($auth_user->role == 1||$auth_user->role == 2)
-                                        <td class="text-center"><input type="checkbox" class="user-check select-user" name="user-check[]" value="{{ $user->id }}"></td>         
+                                        <td><input type="checkbox" class="user-check select-user" name="user-check[]" value="{{ $user->id }}"></td>         
                                         @endif
                                         <td>{{ $user->id }}</td>
                                         <td>
-                                            @if($auth_user->role == 1||$auth_user->role == 2)
+                                            @if($auth_user->role == 1||$auth_user->role == 2 ||$auth_user->id == $user->id)
                                                 <a href="{{ url('/users/edit/'.$user->id) }}">{{ $user->name }}</a>
                                             @else
                                                 <p>{{ $user->name }}</p>
@@ -89,7 +89,7 @@
         </div>
     @endif
     @if(isset($noUser))                    
-            <p>{{$noUser}}</p>
+            <h4 class="ms-2">{{$noUser}}</h4>
     @endif
 @stop
 
