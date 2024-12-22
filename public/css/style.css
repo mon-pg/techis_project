@@ -181,7 +181,7 @@ form p{
     border-radius: 10px;
   }
 .logs-area::-webkit-scrollbar-thumb:hover {
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(223, 223, 223);
   }
 .log-area {
     width: 100%;

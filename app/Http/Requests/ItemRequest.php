@@ -25,7 +25,7 @@ class ItemRequest extends FormRequest
             'title' => 'required|max:100',
             'type' => 'required',
             'salesStatus' => 'required',
-            'salesDate' => 'nullable|date',
+            'salesDate' => 'required|date',
             'detail' => 'nullable|max:300',
             'stock' => 'required',
             'sdStock' => 'required',

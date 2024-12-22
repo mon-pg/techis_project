@@ -208,7 +208,7 @@ class UserController extends Controller
             $roles = $this->roles();
             $departments = $this->departments();
             $targets = $this->target('User');
-            $logs = Log::where('target_type', 'user')->where('target_id',$user->id)->get();
+            $logs = Log::where('target_type', 'user')->where('target_id',$user->id)->orderBy('id', 'desc')->take(15)->get();
                 foreach($logs as $log){
                     $decoded_actions = json_decode($log->action);
                     $actions = [];

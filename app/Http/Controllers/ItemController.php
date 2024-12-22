@@ -98,7 +98,7 @@ class ItemController extends Controller
         $sales = $this->salesStatus();
         $targets = $this->target('Item');
         $auth_user = Auth::user();
-        $logs = Log::where('target_type', 'item')->orderBy('id', 'desc')->get();
+        $logs = Log::where('target_type', 'item')->orderBy('id', 'desc')->take(20)->get();
         //dd($logs);
             foreach($logs as $log){
                 $decoded_actions = json_decode($log->action);
@@ -284,7 +284,7 @@ class ItemController extends Controller
         $types = $this->type();
         $sales = $this->salesStatus();
         $targets = $this->target('Item');
-        $logs = Log::where('target_type', 'Item')->where('target_id',$item->id)->orderBy('id', 'desc')->get();
+        $logs = Log::where('target_type', 'Item')->where('target_id',$item->id)->orderBy('id', 'desc')->take(15)->get();
             foreach($logs as $log){
                 $decoded_actions = json_decode($log->action);
                 $actions = [];
