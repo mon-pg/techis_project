@@ -193,7 +193,7 @@ class UserController extends Controller
                 'id' => 'required',
                 'name' => 'required',
                 'role' => 'required',
-                'department' => 'nullable',
+                'department' => 'required',
                 'email' => 'required|email',
                 'memo' => 'max:50',
             ]);
