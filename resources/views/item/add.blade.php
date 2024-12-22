@@ -32,8 +32,8 @@
                     @csrf
                     <div class="card-body">
                         <div class="form-group-clm">
-                            <div class="form-title"><label class="form-label" for="name">タイトル</label><p class="validation-mark align-self-start">*</p></div>
-                            <input type="text" class="form-control form-text" id="name" name="name" placeholder="タイトルを入力" value="{{ old('name') }}">
+                            <div class="form-title"><label class="form-label" for="title">タイトル</label><p class="validation-mark align-self-start">*</p></div>
+                            <input type="text" class="form-control form-text" id="title" name="title" placeholder="タイトルを入力" value="{{ old('title') }}">
                         </div>
 
                         <div class="form-group-row ">

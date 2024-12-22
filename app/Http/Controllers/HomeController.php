@@ -128,7 +128,7 @@ class HomeController extends Controller
                 
                 $items->where(function($query) use ($keywords){
                     foreach($keywords as $keyword){
-                    $query->orWhere('name', 'LIKE', "%$keyword%")
+                    $query->orWhere('title', 'LIKE', "%$keyword%")
                             ->orWhere('detail', 'LIKE', "%$keyword%");       
                     }
                 });

@@ -31,9 +31,9 @@
                                                 
                                                 <td>
                                                     @if($auth_user->role == 1||$auth_user->role == 2)
-                                                    <a href="{{ url('/items/'.$item->id) }}">{{ $item->name }}</a>
+                                                    <a href="{{ url('/items/'.$item->id) }}">{{ $item->title }}</a>
                                                     @elseif($auth_user->role == 3)
-                                                    <a href="{{ url('/items/detail/'.$item->id) }}">{{ $item->name }}</a>
+                                                    <a href="{{ url('/items/detail/'.$item->id) }}">{{ $item->title }}</a>
                                                     @endif
                                                 </td>
                                                 <td>{{ $types[$item->type] }}</td>

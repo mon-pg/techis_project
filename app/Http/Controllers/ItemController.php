@@ -55,7 +55,7 @@ class ItemController extends Controller
     public function target($target_type){
         if($target_type === 'Item'){
             $targets = [
-            'name' => 'タイトル',
+            'title' => 'タイトル',
             'type' => 'ジャンル',
             'salesStatus' => '販売状況',
             'salesDate' => '発売日',
@@ -114,7 +114,7 @@ class ItemController extends Controller
         $logItems = [];
             foreach($logs as $log){
                 $logUsers[$log->id] =  User::where('id', $log->user_id)->pluck('name', 'id');
-                $logItems[$log->id] =  Item::where('id', $log->target_id)->pluck('name', 'id');
+                $logItems[$log->id] =  Item::where('id', $log->target_id)->pluck('title', 'id');
             }
             
         return view('item.home', compact(
@@ -210,7 +210,7 @@ class ItemController extends Controller
                 
                 $items->where(function($query) use ($keywords){
                     foreach($keywords as $keyword){
-                    $query->orWhere('name', 'LIKE', "%$keyword%")
+                    $query->orWhere('title', 'LIKE', "%$keyword%")
                             ->orWhere('detail', 'LIKE', "%$keyword%");       
                     }
                 });
@@ -244,7 +244,7 @@ class ItemController extends Controller
             // 商品登録
             Item::create([
                 'user_id' => Auth::user()->id,
-                'name' => $request->name,
+                'title' => $request->title,
                 'type' => $request->type,
                 'salesStatus' => $request->salesStatus,
                 'salesDate' => $request->salesDate,

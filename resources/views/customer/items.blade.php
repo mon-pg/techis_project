@@ -62,7 +62,7 @@
                         
                         <img src="{{ empty($item->image) ? asset('img/noImage.jpg') : $item->image }}" class="card-img-top" alt="商品画像">
                         <div class="card-body items-card-body">
-                            <h5 class="card-title items-card-title">{{ $item->name }}</h5>
+                            <h5 class="card-title items-card-title">{{ $item->title }}</h5>
                             <p class="card-text items-card-text">{{ $item->detail }}</p>
                         </div>
                         <ul class="list-group list-group-flush">                            

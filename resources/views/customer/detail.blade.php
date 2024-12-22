@@ -55,7 +55,7 @@
                     </div>
                     <div class="col-md-9">
                         <div class="card-body d-flex flex-column h-100">
-                            <h3 class="card-title detail-title">{{ $item->name }}</h3>
+                            <h3 class="card-title detail-title">{{ $item->title }}</h3>
                             <div class="item-info flex-grow-1 d-flex flex-column justify-content-between">
                                 <p class="card-text ">{{ $item->detail }}</p>
                                 <p class="card-text d-flex justify-content-between">
