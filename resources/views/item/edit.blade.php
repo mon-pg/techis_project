@@ -54,13 +54,13 @@
                 <form method="POST">
                     @csrf
                     <div class="card-body">
-                        <div class="form-group">
-                            <div class="d-inline-flex"><label for="name">タイトル</label><p class="validation-mark align-self-start">*</p></div>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="タイトル" value="{{ old('name', $item->name) }}">
+                        <div class="form-group-clm">
+                            <div class="form-title"><label class="form-label" for="name">タイトル</label><p class="validation-mark align-self-start">*</p></div>
+                            <input type="text" class="form-control form-text" id="name" name="name" placeholder="タイトルを入力" value="{{ old('name', $item->name) }}">
                         </div>
 
-                        <div class="form-group d-flex">
-                            <div class="d-inline-flex"><label for="">ジャンル</label><p class="validation-mark align-self-start">*</p></div>
+                        <div class="form-group-row ">
+                            <div class="form-title"><label class="form-label" for="">ジャンル</label><p class="validation-mark align-self-start">*</p></div>
                             <select class="form-select" id="type" name="type">
                                 <option value="{{ old('type', $item->type) }}" selected>{{$types[$item->type]}}</option>
                                 <option value="1">RPG</option>
@@ -70,8 +70,8 @@
                                 <option value="5">その他</option>
                             </select>
                         </div>
-                        <div class="form-group d-flex">
-                            <div class="d-inline-flex"><label for="">販売状況</label><p class="validation-mark align-self-start">*</p></div>
+                        <div class="form-group-row ">
+                            <div class="form-title"><label class="form-label" for="">販売状況</label><p class="validation-mark align-self-start">*</p></div>
                             <select class="form-select" id="salesStatus" name="salesStatus">
                                 <option value="{{ old('salesStatus', $item->salesStatus) }}" selected>{{$sales[$item->salesStatus]}}</option>
                                 <option value="3">発売予定</option>
@@ -79,36 +79,36 @@
                                 <option value="2">生産終了</option>                                
                             </select>
                         </div>
-                        <div class="form-group d-flex">
-                            <div class="d-inline-flex"><label for="">発売日</label><p class="validation-mark align-self-start">*</p></div>
-                            <input type="date" class="form-control" id="salesDate" name="salesDate" value="{{ old('salesDate', $item->salesDate ? $item->salesDate->format('Y-m-d') : '') }}">
+                        <div class="form-group-row">
+                            <div class="form-title"><label class="form-label" for="">発売日</label><p class="validation-mark align-self-start">*</p></div>
+                            <input type="date" class="form-control form-date" id="salesDate" name="salesDate" value="{{ old('salesDate', $item->salesDate ? $item->salesDate->format('Y-m-d') : '') }}">
                         </div>
 
-                        <div class="form-group">
-                            <label for="detail">商品紹介</label>
-                            <input type="textarea" class="form-control" id="detail" name="detail" placeholder="商品紹介" value="{{ old('detail', $item->detail) }}">
+                        <div class="form-group-clm">
+                            <div class="form-title"><label class="form-label" for="detail">商品紹介</label></div>
+                            <textarea class="form-control form-text" name="detail" id="detail" placeholder="商品紹介文を入力">{{ old('detail', $item->detail) }}</textarea>
                         </div>
 
                         
-                        <div class="d-flex gap-1">
-                            <div class="form-group d-flex">
-                                <div class="d-inline-flex"><label for="detail">在庫数</label><p class="validation-mark align-self-start">*</p></div>
-                                <input type="text" class="form-control" id="stock" name="stock" placeholder="{{$item->stock}}" value="{{ old('stock', $item->stock) }}">
-                                <p>個</p>
+                        <div class="stock-form">
+                            <div class="form-group-row">
+                                <div class="stock-title"><label class="form-label" for="detail">在庫数</label><p class="validation-mark align-self-start">*</p></div>
+                                <input type="text" class="form-control stock-num" id="stock" name="stock" placeholder="{{$item->stock}}" value="{{ old('stock', $item->stock) }}">
+                                <p class="stock-unit">個</p>
                             </div>
 
                             @if($auth_user->role == 1)
-                            <div class="form-group d-inline-flex">
-                                <div class="d-inline-flex"><label for="detail">基準在庫数</label><p class="validation-mark align-self-start">*</p></div>
-                                <input type="text" class="form-control" id="sdStock" name="sdStock" value="{{ old('sdStock', $item->sdStock) }}">
-                                <p>個</p>
+                            <div class="form-group-row">
+                                <div class="stock-title"><label class="form-label" for="detail">基準在庫数</label><p class="validation-mark align-self-start">*</p></div>
+                                <input type="text" class="form-control stock-num" id="sdStock" name="sdStock" value="{{ old('sdStock', $item->sdStock) }}">
+                                <p class="stock-unit">個</p>
                             </div>
                             @else
-                            <div class="form-group d-flex">
-                                <label for="detail">基準在庫数</label>
-                                <input type="text" class="form-control" value="{{ $item->sdStock }}" readonly>
+                            <div class="form-group-row">
+                                <div class="stock-title"><label class="form-label" for="detail">基準在庫数</label></div>
+                                <input type="text" class="form-control stock-num" value="{{ $item->sdStock }}" readonly>
                                 <input type="hidden" class="form-control" id="sdStock" name="sdStock" value="{{ $item->sdStock }}" >
-                                <p>個</p>
+                                <p class="stock-unit">個</p>
                             </div>
                             @endif
                         </div>
@@ -116,8 +116,8 @@
                     </div>
 
                     <div class="card-footer d-flex flex-column-reverse">
-                        <div class="d-flex form-group">
-                            <label for="memo">メモ</label>
+                        <div class="form-group-row form-memo">
+                            <label class="form-label" for="memo">メモ</label>
                             <input type="text" name="memo" id="memo" class="form-control" placeholder="特記事項があれば入力" value="{{ old('memo') }}">
                         </div>
                         <div class="btns">

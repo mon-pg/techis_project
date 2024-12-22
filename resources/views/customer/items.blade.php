@@ -58,12 +58,12 @@
                 <div class="card-area d-flex flex-wrap gap-5">
                 @foreach($items as $item)
                
-                    <a class="card" href="{{ url('/view/items/detail/'.$item->id) }}">
+                    <a class="card items-card" href="{{ url('/view/items/detail/'.$item->id) }}">
                         
                         <img src="{{ empty($item->image) ? asset('img/noImage.jpg') : $item->image }}" class="card-img-top" alt="商品画像">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $item->name }}</h5>
-                            <p class="card-text">{{ $item->detail }}</p>
+                        <div class="card-body items-card-body">
+                            <h5 class="card-title items-card-title">{{ $item->name }}</h5>
+                            <p class="card-text items-card-text">{{ $item->detail }}</p>
                         </div>
                         <ul class="list-group list-group-flush">                            
                             <li class="list-group-item">発売日：{{ $item->salesDate->format('Y/m/d') }}</li>
@@ -85,11 +85,11 @@
                 
                 @endforeach
                 </div>
-                <div class="card-footer">
+                <div class="page-footer">
                 {{ $items->links('vendor.pagination.StockShelf') }}                
                 </div>
             @else
-                <p>{{ $findNoItem }}</p>
+                <h3 class="container">{{ $findNoItem }}</h3>
             @endif
             </div>
             

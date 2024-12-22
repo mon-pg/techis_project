@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'ユーザー編集')
+@section('title', 'Stock Shelf')
 
 
 @section('content_header')
@@ -62,7 +62,7 @@
                             <input type="hidden" class="form-control" id="name" name="name" value="{{ $user->name }}">
                         </div>
                     
-                        <div class="form-group d-flex">
+                        <div class="form-group">
                             <p>権限：</p>
                             @if($auth_user->role == 1 && $auth_user->id !== $user->id)
                                 <select class="form-select" id="role" name="role">
@@ -77,7 +77,7 @@
                             @endif
                         </div>
 
-                        <div class="form-group d-flex">
+                        <div class="form-group">
                             <p>部署：</p>
                             <select class="form-select" id="department" name="department">
                                 @if(!empty($user->department))
@@ -92,7 +92,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group d-flex">
+                        <div class="form-group-clm">
                             <p>メールアドレス：</p>
                             @if($auth_user->id === $user->id)
                             <input type="text" class="form-control" id="email" name="email" value="{{ old('email', $user->email) }}">
@@ -103,7 +103,7 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex flex-column-reverse">
-                        <div class="d-flex form-group">
+                        <div class="form-group-clm mt-1">
                             <p>メモ：</p>
                             <input type="text" name="memo" id="memo" class="form-control" placeholder="特記事項があれば入力" value="{{ old('memo') }}">
                         </div>

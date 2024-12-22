@@ -1,7 +1,4 @@
-.delete-check{
-    transform: scale(1.2);
 
-}
 .brand-link {
     text-decoration: none;
 }
@@ -15,6 +12,15 @@ td a{
     cursor: pointer;
 }
 
+/* 一覧チェックボックス */
+.delete-check{
+    transform: scale(1.2);
+    margin-left: 1rem;
+}
+.user-check{
+    transform: scale(1.2);
+    margin-left: 1rem;
+}
 /* 登録・更新フォーム */
 .validation-mark{
     color: red ;
@@ -76,6 +82,10 @@ td a{
 .form-select{
     background-color: #fff !important;
     height: fit-content !important;
+    width: fit-content !important;
+}
+.form-date{
+    width: fit-content !important;
 }
 .check-label {
     font-weight: normal !important;
@@ -83,6 +93,74 @@ td a{
  }
 .form-control{
     background: #ffffff !important;
+}
+
+/* 
+    商品登録・編集画面 
+*/
+.card {
+    max-width: 60rem;
+}
+.form-group-clm{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+}
+.form-group-clm div p{
+    margin: 0 !important;
+}
+.form-group-row{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 0.5rem;
+}
+.form-title {
+    display: inline-flex;
+    margin: 0 0.2rem 0 0.2rem;
+    width: 4.5rem;
+}
+.form-label {
+    margin: 0 !important;
+}
+textarea {
+    min-height: 5rem !important;
+}
+    /* ストック関連のフォーム */
+.stock-form{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.stock-unit{
+    margin: 0 0 0 0.3rem !important;
+    align-self: self-end;
+}
+.stock-title {
+    display: inline-flex;
+    margin: 0 0.5rem 0 0.2rem;
+    width: fit-content;
+}
+.stock-num{
+    width: 4rem !important;
+}
+    /* メモ関連 */
+.form-memo {
+    margin: 1rem 0 0.5rem 0;
+}
+.form-memo label{
+    min-width: 2.5rem;
+}
+
+/*
+    ユーザー編集・登録画面
+*/
+form p{
+    margin: 0 !important;
+}
+.form-group {
+    display: flex;
+    align-items: center;
+    text-align: center;
 }
 
 
@@ -94,6 +172,7 @@ td a{
 /* ログ */
 .log-area {
     width: 100%;
+    max-width: 60rem;
     border-bottom: solid 1px rgb(95, 95, 95);
     margin-bottom: 0.5rem;
     padding: 0 0.5rem 0.2rem 0.5rem;

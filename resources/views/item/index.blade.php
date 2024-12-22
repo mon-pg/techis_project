@@ -60,7 +60,7 @@
                                 @foreach ($items as $item)
                                     <tr>
                                         @if($auth_user->role == 1)
-                                        <td class="text-center"><input type="checkbox" class="delete-check select-item" name="delete-check[]" value="{{ $item->id }}"></td>
+                                        <td class=""><input type="checkbox" class="delete-check select-item" name="delete-check[]" value="{{ $item->id }}"></td>
                                         @endif
                                         <td>{{ $item->id }}</td>
                                         <td>

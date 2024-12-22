@@ -58,7 +58,7 @@ class HomeController extends Controller
      * 商品一覧（顧客用）
      */
     public function items() {
-        $items = Item::paginate(10);
+        $items = Item::paginate(12);
         $types = $this->type();
         $sales = $this->salesStatus();
         $noItem = '商品がありません。';
