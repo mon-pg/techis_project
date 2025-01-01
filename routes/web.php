@@ -49,7 +49,8 @@ Route::prefix('items')->middleware('auth')->group(function () {
     Route::get('/{item}', [App\Http\Controllers\ItemController::class, 'editView']);//ここ/{変数（item）}って書いてるから、/items/○○が全部ここに飛んでしまう。変数の前に/editとか、書かないといかん。この書き方良くない！
     Route::post('/{item}', [App\Http\Controllers\ItemController::class, 'edit']);  
     Route::post('/delete/{item}', [App\Http\Controllers\ItemController::class, 'destroy']);
-    Route::post('/some/delete', [App\Http\Controllers\ItemController::class, 'destroy']);
+    Route::post('/some/delete', [App\Http\Controllers\ItemController::class, 'someDestroy']);
+    Route::get('/image/delete', [App\Http\Controllers\ItemController::class, 'imageDestroy']);
 });
 
 Route::prefix('users')->middleware('auth')->group(function(){

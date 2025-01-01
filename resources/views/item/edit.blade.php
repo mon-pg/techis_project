@@ -24,9 +24,12 @@
                     <h4 class="modal-title" id="myModalLabel">削除確認</h4>
                 </div>
                 <div class="modal-body">
-                    <p class="delete-message">本当に削除しますか？</p>
-                    <p class="none-message"></p>
-
+                    <p class="delete-message">商品自体が削除されます。本当によろしいですか？</p>
+                    <div class="mt-1">
+                        <p style="color:red; font-size:small;">※画像のみ削除したい場合</p>
+                        <p>画像を選択し、＜更新ボタン＞を押してください。</p>
+                    </div>
+                    
                 </div>
                 <div class="modal-footer">                    
                     <button type="submit" class="btn btn-danger btn-delete-confirm">削除</button>
@@ -51,7 +54,7 @@
             @endif
 
             <div class="card card-primary">
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
                         <div class="form-group-clm">
@@ -112,6 +115,24 @@
                             </div>
                             @endif
                         </div>
+                        <div class="form-group-row">
+                            <input type="file" name="images[]" id="image" accept="image/*" class="file-btn" multiple>
+                        </div>
+                        @if($item->image != null)
+                            <div class="form-group-row gap-3">
+                                @foreach(json_decode($item->image, true) as $image)
+                                <div class="d-flex flex-column align-items-center image-check">
+                                    <div class="d-flex flex-row-reverse gap-1 image-check-box">
+                                        <p>削除</p>
+                                        <input type="checkbox" name="imageDeleteCheck[]" id="{{ $image['public_id'] }}" value="{{ $image['public_id'] }}" >
+                                    </div>
+                                    <label for="{{ $image['public_id'] }}" class="item-label mt-1">
+                                        <img src="{{ $image['url'] }}" alt="商品画像" class="item-image">
+                                    </label>
+                                </div>
+                                @endforeach
+                            </div>
+                        @endif
                         
                     </div>
 
@@ -123,7 +144,7 @@
                         <div class="btns">
                             <button type="submit" class="btn btn-primary">更新</button>
                             @if($auth_user->role == 1)
-                            <a href="#" class="btn btn-danger btn-delete-confirm" data-toggle="modal" data-target="#deleteModal" data-url="{{ url('/items/delete/'.$item->id) }}" data-id="{{ $item->id }}" > 削除 </a>
+                            <a href="#" class="btn btn-danger btn-delete-confirm" data-toggle="modal" data-target="#deleteModal" data-url="{{ url('/items/delete/'.$item->id) }}" data-id="{{ $item->id }}" > 商品削除 </a>
                             @endif
                         </div>
                         

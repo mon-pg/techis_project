@@ -63,7 +63,6 @@ window.onload = function() {
         }
     });
 
-
     // 背景クリックでモーダルが閉じないように設定
     $('#deleteModal').modal({
         backdrop: 'static',
@@ -96,7 +95,6 @@ window.onload = function() {
         }
       });
       
-
-
+      
 
 }

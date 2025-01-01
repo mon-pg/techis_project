@@ -29,7 +29,9 @@ class ItemRequest extends FormRequest
             'detail' => 'nullable|max:300',
             'stock' => 'required',
             'sdStock' => 'required',
-            'memo' => 'max:60',
+            'images' => 'nullable|array',
+            'images.*' => 'file|image|mimes:jpg,jpeg,png|max:2048',
+            'memo' => 'nullable|max:60',
         ];
     }
      /**

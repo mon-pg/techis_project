@@ -20,6 +20,7 @@ class Item extends Model
         'stock',
         'sdStock',
         'detail',
+        'image',
     ];
 
     /**
