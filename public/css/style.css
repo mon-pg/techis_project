@@ -166,8 +166,10 @@ textarea {
     max-height: 15rem;
     height: 100%;
     object-fit: cover;
-    border: solid 1px #d3d3d3;
+    padding: 0.2rem;
+    border: solid 1px #eeeeee;
     border-radius: 10px;
+    background-color: #ffffff;
     transition: 0.15s ease-in-out;
 }
 /* チェック時の画像 */
@@ -263,3 +265,25 @@ form p{
 .log-area p{
     margin: 0;
 }
+
+
+/*
+ * Slick用
+ */
+ .slick-images {
+    text-align: center;
+    width: 90%;
+    margin: auto;
+    padding: 0%;
+ }
+ .slick-images img{
+    max-width: 15rem;
+    width: 100%;
+    max-height: 15rem;
+    height: 100%;
+ }
+ .slick-prev:before,
+ .slick-next:before{
+	color: rgb(0, 0, 0) !important;
+ }
+

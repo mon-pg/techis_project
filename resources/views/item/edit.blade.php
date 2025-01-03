@@ -119,7 +119,7 @@
                             <input type="file" name="images[]" id="image" accept="image/*" class="file-btn" multiple>
                         </div>
                         @if($item->image != null)
-                            <div class="form-group-row gap-3">
+                            <!-- <div class="form-group-row gap-3">
                                 @foreach(json_decode($item->image, true) as $image)
                                 <div class="d-flex flex-column align-items-center image-check">
                                     <input type="checkbox" name="imageDeleteCheck[]" id="{{ $image['public_id'] }}" value="{{ $image['public_id'] }}" >
@@ -129,6 +129,17 @@
                                         <p>削除</p>
                                     </label>
                         
+                                </div>
+                                @endforeach
+                            </div> -->
+                            <div class="slick-images">
+                                @foreach(json_decode($item->image, true) as $image)
+                                <div class="image-check">
+                                    <input type="checkbox" name="imageDeleteCheck[]" id="{{ $image['public_id'] }}" value="{{ $image['public_id'] }}" hidden>                               
+                                    <label for="{{ $image['public_id'] }}" class="item-label mt-1">
+                                        <img src="{{ $image['url'] }}" alt="商品画像" class="item-image">
+                                        <p>削除</p>
+                                    </label>
                                 </div>
                                 @endforeach
                             </div>
@@ -184,8 +195,26 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick-theme.css"/>
 @stop
 
 @section('js')
 <script src="{{ asset('js/edit.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.min.js"></script>
+<!-- Slick用に初期化 -->
+<script>
+$(document).ready(function(){
+    $('.slick-images').slick({
+        dots: true,               // 下部にドットを表示
+        infinite: false,           // 無限ループ
+        speed: 300,               // アニメーション速度
+        slidesToShow: 3,          // 表示するスライド数
+        slidesToScroll: 3,        // スクロールするスライド数
+        autoplay: false,           // 自動再生
+        autoplaySpeed: 2000,      // 自動再生の間隔 (ms)
+        arrows: true,             // 前後ボタンの表示
+    });
+});
+</script>
 @stop

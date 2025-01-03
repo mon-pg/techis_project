@@ -16,6 +16,9 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="{{ asset('css/customer.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick-theme.css"/>
+
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -46,29 +49,55 @@
 
         <main class="container d-flex flex-column align-items-center gap-2 mt-5">
             <a href="#" class="btn-back align-self-start" onclick="history.back()">戻る</a>
-            <div class="card h-100 w-100" style="max-width: 800px;">
-                <div class="row g-0 h-100">
-                    <div class="col-md-3">
-                        <img src="{{ empty($item->image) ? asset('img/noImage.jpg') : $item->image }}" 
-                            class="img-fluid rounded-start h-100" 
-                            alt="商品紹介画像" style="object-fit: cover;">
-                    </div>
-                    <div class="col-md-9">
-                        <div class="card-body d-flex flex-column h-100">
-                            <h3 class="card-title detail-title">{{ $item->title }}</h3>
-                            <div class="item-info flex-grow-1 d-flex flex-column justify-content-between">
-                                <p class="card-text ">{{ $item->detail }}</p>
-                                <p class="card-text d-flex justify-content-between">
-                                    <small class="text-body-secondary">{{ $item->salesDate->format('Y/m/d') }}発売</small>
-                                    <small class="text-body-secondary">{{ $types[$item->type] }}</small>
-                                </p>
+            <div class="card detail-card h-100 w-100" style="max-width: 800px;">
+                <div class="row">
+                        @if(empty($item->image))
+                            <div class="slick-images">
+                                <img src="{{ asset('img/noImage.jpg') }}" class="item-image" alt="商品紹介画像">
+                            </div>                        
+                        @else
+                            <div class="slick-images">
+                                @foreach(json_decode($item->image, true) as $image)
+                                <img src="{{ $image['url'] }}" alt="商品画像" class="item-image">
+                                @endforeach
                             </div>
+                        @endif
+                    </div>
+                <div class="row g-1 h-100">
+                    <div class="card-body d-flex flex-column h-100 detail-card-body">
+                        <h3 class="card-title detail-title">{{ $item->title }}</h3>
+                        <div class="item-info flex-grow-1 d-flex flex-column justify-content-between">
+                            <p class="card-text ">{{ $item->detail }}</p>
+                            <p class="card-text d-flex justify-content-between">
+                                <small class="text-body-secondary">{{ $item->salesDate->format('Y/m/d') }}発売</small>
+                                <small class="text-body-secondary">{{ $types[$item->type] }}</small>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
-    
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.min.js"></script>
+<!-- Slick用に初期化 -->
+<script>
+$(document).ready(function(){
+    $('.slick-images').slick({
+        dots: true,               // 下部にドットを表示
+        infinite: true,           // 無限ループ
+        speed: 500,               // アニメーション速度
+        slidesToShow: 1,          // 表示するスライド数
+        slidesToScroll: 1,        // スクロールするスライド数
+        autoplay: true,           // 自動再生
+        autoplaySpeed: 4000,      // 自動再生の間隔 (ms)
+        arrows: true,             // 前後ボタンの表示
+        centerMode: true,
+        variableWidth: true,  
+    });
+});
+</script>
 </body>
 </html>
