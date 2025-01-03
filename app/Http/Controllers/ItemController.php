@@ -383,19 +383,19 @@ class ItemController extends Controller
         $sales = $this->salesStatus();
         $targets = $this->target('Item');
         $logs = Log::where('target_type', 'Item')->where('target_id',$item->id)->orderBy('id', 'desc')->get();
-        $users = [];
+        $logUsers = [];
             foreach($logs as $log){
-                $user = User::where('id', $log->user_id)->first();
+                $logUsers = User::where('id', $log->user_id)->first();
 
-                if($user && $user->status === 1){
-                    $users[$log->id] =  $user->name;
+                if($logUsers && $logUsers->status === 1){
+                    $users[$log->id] =  $logUsers->name;
                 }else {
                     $users[$log->id] = 'ユーザー';
                 }
                 
             }
   
-        return view('item.detail', compact('item', 'auth_user', 'types', 'sales', 'users', 'logs', 'targets'));
+        return view('item.detail', compact('item', 'auth_user', 'types', 'sales', 'logUsers', 'logs', 'targets'));
     }
     /**
      * ログ作成

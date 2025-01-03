@@ -107,10 +107,10 @@
                                 <p class="stock-unit">個</p>
                             </div>
                             @else
-                            <div class="form-group-row">
+                            <div class="form-group-row d-inline-flex">
                                 <div class="stock-title"><label class="form-label" for="detail">基準在庫数</label></div>
-                                <input type="text" class="form-control stock-num" value="{{ $item->sdStock }}" readonly>
-                                <input type="hidden" class="form-control" id="sdStock" name="sdStock" value="{{ $item->sdStock }}" >
+                                <p class="form-control stock-num readonly">5</p>    
+                                <input type="hidden" class="form-control stock-num" id="sdStock" name="sdStock" value="5">                            
                                 <p class="stock-unit">個</p>
                             </div>
                             @endif
@@ -118,20 +118,7 @@
                         <div class="form-group-row">
                             <input type="file" name="images[]" id="image" accept="image/*" class="file-btn" multiple>
                         </div>
-                        @if($item->image != null)
-                            <!-- <div class="form-group-row gap-3">
-                                @foreach(json_decode($item->image, true) as $image)
-                                <div class="d-flex flex-column align-items-center image-check">
-                                    <input type="checkbox" name="imageDeleteCheck[]" id="{{ $image['public_id'] }}" value="{{ $image['public_id'] }}" >
-                                                                 
-                                    <label for="{{ $image['public_id'] }}" class="item-label mt-1">
-                                        <img src="{{ $image['url'] }}" alt="商品画像" class="item-image">
-                                        <p>削除</p>
-                                    </label>
-                        
-                                </div>
-                                @endforeach
-                            </div> -->
+                        @if($item->image != null)    
                             <div class="slick-images">
                                 @foreach(json_decode($item->image, true) as $image)
                                 <div class="image-check">

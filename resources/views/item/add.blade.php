@@ -82,10 +82,10 @@
                                 <p class="stock-unit">個</p>
                             </div>
                             @else
-                            <div class="form-group-row d-flex">
+                            <div class="form-group-row d-inline-flex">
                                 <div class="stock-title"><label class="form-label" for="detail">基準在庫数</label></div>
-                                <input type="text" class="form-control" value="5" readonly>
-                                <input type="hidden" class="form-control stock-num" id="sdStock" name="sdStock" value="5">
+                                <p class="form-control stock-num readonly">5</p>    
+                                <input type="hidden" class="form-control stock-num" id="sdStock" name="sdStock" value="5">                            
                                 <p class="stock-unit">個</p>
                             </div>
                             @endif
