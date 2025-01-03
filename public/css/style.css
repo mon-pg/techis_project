@@ -168,11 +168,43 @@ textarea {
     object-fit: cover;
     border: solid 1px #d3d3d3;
     border-radius: 10px;
-    transition: 0.3s ease-in-out;
+    transition: 0.15s ease-in-out;
 }
 /* チェック時の画像 */
-.image-check div input[type="checkbox"]:checked + img {
-    filter: brightness(70%);
+.image-check input[type="checkbox"]:checked + .item-label img {
+    background-color: #ffffff;
+    filter: brightness(50%);
+}
+.item-label{
+    position: relative;
+}
+.item-label:hover img {
+    background-color: #ffffff;
+    filter: brightness(50%);
+}
+.item-label:hover p {
+    opacity: 1;
+}
+.item-label p{
+    opacity: 0;
+    cursor: pointer;
+    position: absolute;/*重ねたい子要素にabsolute*/
+    top:50%;
+    left: 50%;
+   -ms-transform: translate(-50%,-50%);/*ベンダープレフィックス*/
+    -webkit-transform: translate(-50%,-50%);/*ベンダープレフィックス*/
+    transform: translate(-50%,-50%);/*センター寄せの修正*/
+    color: #fff;
+    font-size: 1.8rem;
+    margin: 0!important;/*文字がずれている場合や*/
+    padding: 0!important;/*文字が折り返される場合*/
+    transition: 0.15s ease-in-out;
+}
+.item-label p:hover{
+    opacity: 1;
+}
+.image-check input[type="checkbox"]:checked + .item-label p{
+   opacity: 1;
 }
 
     /* メモ関連 */

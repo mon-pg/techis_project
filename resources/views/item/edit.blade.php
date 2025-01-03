@@ -122,13 +122,13 @@
                             <div class="form-group-row gap-3">
                                 @foreach(json_decode($item->image, true) as $image)
                                 <div class="d-flex flex-column align-items-center image-check">
-                                    <div class="d-flex flex-row-reverse gap-1 image-check-box">
-                                        <p>削除</p>
-                                        <input type="checkbox" name="imageDeleteCheck[]" id="{{ $image['public_id'] }}" value="{{ $image['public_id'] }}" >
-                                    </div>
+                                    <input type="checkbox" name="imageDeleteCheck[]" id="{{ $image['public_id'] }}" value="{{ $image['public_id'] }}" >
+                                                                 
                                     <label for="{{ $image['public_id'] }}" class="item-label mt-1">
                                         <img src="{{ $image['url'] }}" alt="商品画像" class="item-image">
+                                        <p>削除</p>
                                     </label>
+                        
                                 </div>
                                 @endforeach
                             </div>

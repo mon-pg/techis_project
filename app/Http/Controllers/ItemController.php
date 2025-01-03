@@ -298,12 +298,15 @@ class ItemController extends Controller
     {   
         //バリデーション
             $data = $request->validated();
+            $originalItemData  = $item;
         //削除するimageがある場合
         if(isset($request->imageDeleteCheck)){
             $public_ids = $request->imageDeleteCheck;
-            $this->imageDestroy($public_ids, $item->id);
+            $item = $this->imageDestroy($public_ids, $item->id); //画像を削除した配列でitemを再定義
+            $data['image'] = $item->image;
         }
-        //imageがある場合、配列に追加
+
+        //imageをアップロードする場合、配列に追加
         if($request->hasFile('images')){
             $storeImage = [];
             $oldImage = json_decode($item->image);
@@ -326,7 +329,7 @@ class ItemController extends Controller
             $data['image'] = json_encode($updateImage);
         }
         //ログを作成
-            $this->log($data, $item);            
+            $this->log($data, $originalItemData);            
         //更新
             $item->fill($data)->save();
             if($request->hasFile('images')){
@@ -480,15 +483,18 @@ class ItemController extends Controller
 
         return redirect()->route('items');
     }
+    /**
+     * 画像削除
+     */
     public function imageDestroy($public_ids, $item_id){
         $item = Item::find($item_id);
         $itemImages = json_decode($item->image, true);
-        $check = [];
         foreach($itemImages as $key => $value){
             if(array_search($value['public_id'], $public_ids) !== false){
                 unset($itemImages[$key]);
             }
         }
+
         $itemImages = array_values($itemImages); //indexを詰める
         $item->update([
             'image' => json_encode($itemImages), 
@@ -498,7 +504,9 @@ class ItemController extends Controller
             Cloudinary::destroy($public_id);
         }
 
-        return true;
+        $newData = Item::find($item->id);
+
+        return $newData;
     }
     
 }
