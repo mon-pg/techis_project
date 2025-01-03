@@ -261,6 +261,7 @@ return [
         'stock' => '在庫数',
         'sdStock' => '基準在庫数',
         'detail' => '商品紹介',
+        'salesDate' => '発売日',
     ],
 
 ];

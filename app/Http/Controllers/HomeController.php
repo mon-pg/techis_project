@@ -86,7 +86,7 @@ class HomeController extends Controller
 
         if(empty($sKeywords)&&empty($sSalesStatus)&&empty($sType)&&empty($start)&&empty($end)&&empty($sStockStatus)){   //検索内容が空の場合
             $searchError = '※検索項目を入力してください。';
-            $items = $items->paginate(10);
+            $items = $items->paginate(12);
             return view('customer.items',compact('items', 'sales', 'types', 'searchError'));
         }else{
 
@@ -135,7 +135,7 @@ class HomeController extends Controller
             }
             
             $check = $items->get();
-            $items = $items->paginate(10)->appends($request->query());;            
+            $items = $items->paginate(12)->appends($request->query());;            
             if(count($check) === 0){
                 $findNoItem = '該当する商品が存在しません。';
                 return view('customer.items', compact('items', 'sales', 'types', 'sType','stockStatuses', 'start', 'end', 'findNoItem'));

@@ -24,9 +24,12 @@
                     <h4 class="modal-title" id="myModalLabel">削除確認</h4>
                 </div>
                 <div class="modal-body">
-                    <p class="delete-message">本当に削除しますか？</p>
-                    <p class="none-message"></p>
-
+                    <p class="delete-message">商品自体が削除されます。本当によろしいですか？</p>
+                    <div class="mt-1">
+                        <p style="color:red; font-size:small;">※画像のみ削除したい場合</p>
+                        <p>画像を選択し、＜更新ボタン＞を押してください。</p>
+                    </div>
+                    
                 </div>
                 <div class="modal-footer">                    
                     <button type="submit" class="btn btn-danger btn-delete-confirm">削除</button>
@@ -51,7 +54,7 @@
             @endif
 
             <div class="card card-primary">
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
                         <div class="form-group-clm">
@@ -112,6 +115,35 @@
                             </div>
                             @endif
                         </div>
+                        <div class="form-group-row">
+                            <input type="file" name="images[]" id="image" accept="image/*" class="file-btn" multiple>
+                        </div>
+                        @if($item->image != null)
+                            <!-- <div class="form-group-row gap-3">
+                                @foreach(json_decode($item->image, true) as $image)
+                                <div class="d-flex flex-column align-items-center image-check">
+                                    <input type="checkbox" name="imageDeleteCheck[]" id="{{ $image['public_id'] }}" value="{{ $image['public_id'] }}" >
+                                                                 
+                                    <label for="{{ $image['public_id'] }}" class="item-label mt-1">
+                                        <img src="{{ $image['url'] }}" alt="商品画像" class="item-image">
+                                        <p>削除</p>
+                                    </label>
+                        
+                                </div>
+                                @endforeach
+                            </div> -->
+                            <div class="slick-images">
+                                @foreach(json_decode($item->image, true) as $image)
+                                <div class="image-check">
+                                    <input type="checkbox" name="imageDeleteCheck[]" id="{{ $image['public_id'] }}" value="{{ $image['public_id'] }}" hidden>                               
+                                    <label for="{{ $image['public_id'] }}" class="item-label mt-1">
+                                        <img src="{{ $image['url'] }}" alt="商品画像" class="item-image">
+                                        <p>削除</p>
+                                    </label>
+                                </div>
+                                @endforeach
+                            </div>
+                        @endif
                         
                     </div>
 
@@ -123,7 +155,7 @@
                         <div class="btns">
                             <button type="submit" class="btn btn-primary">更新</button>
                             @if($auth_user->role == 1)
-                            <a href="#" class="btn btn-danger btn-delete-confirm" data-toggle="modal" data-target="#deleteModal" data-url="{{ url('/items/delete/'.$item->id) }}" data-id="{{ $item->id }}" > 削除 </a>
+                            <a href="#" class="btn btn-danger btn-delete-confirm" data-toggle="modal" data-target="#deleteModal" data-url="{{ url('/items/delete/'.$item->id) }}" data-id="{{ $item->id }}" > 商品削除 </a>
                             @endif
                         </div>
                         
@@ -163,8 +195,26 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick-theme.css"/>
 @stop
 
 @section('js')
 <script src="{{ asset('js/edit.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.min.js"></script>
+<!-- Slick用に初期化 -->
+<script>
+$(document).ready(function(){
+    $('.slick-images').slick({
+        dots: true,               // 下部にドットを表示
+        infinite: false,           // 無限ループ
+        speed: 300,               // アニメーション速度
+        slidesToShow: 3,          // 表示するスライド数
+        slidesToScroll: 3,        // スクロールするスライド数
+        autoplay: false,           // 自動再生
+        autoplaySpeed: 2000,      // 自動再生の間隔 (ms)
+        arrows: true,             // 前後ボタンの表示
+    });
+});
+</script>
 @stop

@@ -28,7 +28,7 @@
             @endif
 
             <div class="card card-primary">
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
                         <div class="form-group-clm">
@@ -89,6 +89,9 @@
                                 <p class="stock-unit">個</p>
                             </div>
                             @endif
+                        </div>
+                        <div class="form-group-row">
+                            <input type="file" name="images[]" id="image" accept="image/*" class="file-btn" multiple>
                         </div>
                     </div>
 

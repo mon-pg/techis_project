@@ -21,6 +21,12 @@
     width: 18rem;
     cursor: pointer;
 }
+.card-img-top{
+    width: 18rem;
+    height: 18rem;
+    object-fit: cover;
+
+}
 .items-card-body{
     background-color: #fff;
     height: 110px;
@@ -94,10 +100,37 @@
     margin-bottom: 0 !important;
 }
 
+
+
 /* 商品詳細画面 */
-.card-body{
+.detail-card{
+    border: none !important;
+}
+.detail-card-body{
     background-color: #ffffff;
+    border-radius: 10px;
 }
 .detail-title {
     font-weight: bold;
 }
+
+/*
+ * Slick用
+ */
+ .slick-images {
+    text-align: center;
+    width: 80%;
+    padding: 0;
+ }
+ .slick-images img{
+    height: 20rem;
+    max-width: 30rem;
+    margin: 0.5rem 1.5rem;
+    object-fit: cover;
+    border-radius: 10px;
+ }
+ .slick-prev:before,
+ .slick-next:before{
+	color: rgb(0, 0, 0) !important;
+ }
+

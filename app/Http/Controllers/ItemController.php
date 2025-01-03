@@ -9,8 +9,13 @@ use App\Models\Item;
 use App\Models\Log;
 use App\Models\User;
 use Carbon\Carbon;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use DateTime;
 use Hamcrest\Arrays\IsArray;
+use Illuminate\Support\Arr;
+use JeroenNoten\LaravelAdminLte\View\Components\Form\Input;
+
+use function PHPUnit\Framework\isNull;
 
 class ItemController extends Controller
 {
@@ -61,7 +66,8 @@ class ItemController extends Controller
             'salesDate' => '発売日',
             'stock' => '在庫数',
             'sdStock' => '基準在庫数',
-            'detail' => '商品紹介',            
+            'detail' => '商品紹介',
+            'image' => '商品画像',     
             ];
         }elseif($target_type === 'User'){
             $targets = [
@@ -98,14 +104,20 @@ class ItemController extends Controller
         $sales = $this->salesStatus();
         $targets = $this->target('Item');
         $auth_user = Auth::user();
-        $logs = Log::where('target_type', 'item')->orderBy('id', 'desc')->get();
+        $logs = Log::where('target_type', 'item')->orderBy('id', 'desc')->take(20)->get();
         //dd($logs);
             foreach($logs as $log){
                 $decoded_actions = json_decode($log->action);
                 $actions = [];
                 foreach($decoded_actions as $action){
-                    $actions[] = $targets[$action];
-                    
+                    if(isset($targets[$action])){
+                        $actions[] = $targets[$action];
+                    }else{
+                        continue;
+                    }
+                }
+                if($actions == null){
+                    $actions = ['商品情報'];
                 }
                 $log->action = $actions;
             }
@@ -248,6 +260,20 @@ class ItemController extends Controller
     {
         // POSTリクエストのとき
         if ($request->isMethod('post')) {
+            $storeImage = [];
+
+            if($request->file('images') != null){
+                foreach($request->file('images') as $image){
+                    $imageResult = cloudinary()->upload($image->getRealPath(), [
+                        'folder' => 'Portfolio',
+                    ]);
+                    $storeImage[] =[
+                        'url' => $imageResult->getSecurePath(),
+                        'public_id' => $imageResult->getPublicId(),
+                    ];
+                }
+            }
+
             // 商品登録
             Item::create([
                 'user_id' => Auth::user()->id,
@@ -259,6 +285,7 @@ class ItemController extends Controller
                 'sdStock' => $request->sdStock,
                 'stockStatus' => $request->stockStatus,
                 'detail' => $request->detail,
+                'image' => json_encode($storeImage),
             ]);
 
             return redirect('/items');
@@ -271,10 +298,45 @@ class ItemController extends Controller
     {   
         //バリデーション
             $data = $request->validated();
+            $originalItemData  = $item;
+        //削除するimageがある場合
+        if(isset($request->imageDeleteCheck)){
+            $public_ids = $request->imageDeleteCheck;
+            $item = $this->imageDestroy($public_ids, $item->id); //画像を削除した配列でitemを再定義
+            $data['image'] = $item->image;
+        }
+
+        //imageをアップロードする場合、配列に追加
+        if($request->hasFile('images')){
+            $storeImage = [];
+            $oldImage = json_decode($item->image);
+            foreach($request->file('images') as $image){
+                $imageResult = cloudinary()->upload($image->getRealPath(), [
+                    'folder' => 'Portfolio',
+                ]);
+                $storeImage[] =[
+                    'url' => $imageResult->getSecurePath(),
+                    'public_id' => $imageResult->getPublicId(),
+                ];
+            }
+            //dd([$oldImage, $storeImage]);
+            if($oldImage == null){
+                $updateImage = $storeImage;
+            }else{
+                $updateImage = array_merge($oldImage, $storeImage);
+            }
+    
+            $data['image'] = json_encode($updateImage);
+        }
         //ログを作成
-            $this->log($data, $item);            
+            $this->log($data, $originalItemData);            
         //更新
             $item->fill($data)->save();
+            if($request->hasFile('images')){
+                $item->update([
+                    'image' => json_encode($updateImage),
+                ]);
+            }
             
             return redirect('/items');
         
@@ -284,25 +346,30 @@ class ItemController extends Controller
         $types = $this->type();
         $sales = $this->salesStatus();
         $targets = $this->target('Item');
-        $logs = Log::where('target_type', 'Item')->where('target_id',$item->id)->orderBy('id', 'desc')->get();
+        $logs = Log::where('target_type', 'Item')->where('target_id',$item->id)->orderBy('id', 'desc')->take(15)->get();
             foreach($logs as $log){
                 $decoded_actions = json_decode($log->action);
                 $actions = [];
                 foreach($decoded_actions as $action){
-                    $actions[] = $targets[$action];
+                    if(isset($targets[$action])){
+                        $actions[] = $targets[$action];
+                    }else{
+                        continue;
+                    }
+                }
+                if($actions == null){
+                    $actions = ['商品情報'];
                 }
                 $log->action = $actions;
             }
         $logUsers = [];
         foreach($logs as $log){
             $user = User::where('id', $log->user_id)->first();
-
             if($user && $user->status === 1){
                 $logUsers[$log->id] =  $user->name;
             }else {
                 $logUsers[$log->id] = 'ユーザー';
             }
-            
         }
   
         return view('item.edit', compact('item', 'auth_user', 'types', 'sales', 'logUsers', 'logs', 'targets'));
@@ -337,16 +404,22 @@ class ItemController extends Controller
         $logs = [];
         $memo = $validatedData['memo'] ?? null;
         unset($validatedData['memo']);
+        //dd($validatedData);
         foreach($validatedData as $key => $value){
-            if( $key === 'salesDate'){
-                // 編集formのsalesDateをDate型からDateTime型に変換
-                $value = new DateTime($value);
+            if( $key === 'images'){
+                // ログのアクションには、imagesではなく、imageを使用するため
+                continue;
+            }else{
+                if( $key === 'salesDate'){
+                    // 編集formのsalesDateをDate型からDateTime型に変換
+                    $value = new DateTime($value);
+                }
+                if($item->getOriginal($key) != $value){
+                    $actions[] = $key;
+                    $before_values[$key] = $item->getOriginal($key);
+                    $after_values[$key] = $value; 
+                } 
             }
-            if($item->getOriginal($key) != $value){
-                $actions[] = $key;
-                $before_values[$key] = $item->getOriginal($key);
-                $after_values[$key] = $value;   
-            } 
         }
         if(!empty($actions)){
             $logs[] = [
@@ -371,18 +444,69 @@ class ItemController extends Controller
     /**
      * 商品削除
      */
-    public function destroy(Request $request,Item $item){
+    public function destroy(Item $item){
+        $public_ids = [];
+        if(isset($item->image)){
         
-        if($item !== null){
+            for($i=0; $i<count(json_decode($item->image, true)); $i++){
+                $public_ids[] = json_decode($item->image, true)[$i]['public_id'];
+            }       
+            foreach($public_ids as $public_id){
+                Cloudinary::destroy($public_id);
+            }
+        }
+
         Log::where('target_type', 'Item')->where('target_id', $item->id)->delete();
         Item::destroy($item->id);
+
+         return redirect()->route('items');
+    }
+    public function someDestroy(Request $request){
+        $public_ids = [];
+        //複数件削除
+        $check_items = Item::whereIn('id', $request->input('id'))->get(); 
+        foreach($check_items as $check_item){
+            if(isset($check_item->image)){
+                for($i=0; $i<count(json_decode($check_item->image, true)); $i++){
+                    $public_ids[] = json_decode($check_item->image, true)[$i]['public_id'];
+                }  
+            }
         }
-        if(is_array($request->input('id'))){
-            Log::where('target_type', 'Item')->whereIn('target_id', $request->input('id'))->delete();   
-            Item::destroy($request->id);
+        Log::where('target_type', 'Item')->whereIn('target_id', $request->input('id'))->delete();   
+        Item::destroy($request->id);
+        
+        if(!empty($public_ids)){
+            foreach($public_ids as $public_id){
+                Cloudinary::destroy($public_id);
+            }
         }
 
         return redirect()->route('items');
+    }
+    /**
+     * 画像削除
+     */
+    public function imageDestroy($public_ids, $item_id){
+        $item = Item::find($item_id);
+        $itemImages = json_decode($item->image, true);
+        foreach($itemImages as $key => $value){
+            if(array_search($value['public_id'], $public_ids) !== false){
+                unset($itemImages[$key]);
+            }
+        }
+
+        $itemImages = array_values($itemImages); //indexを詰める
+        $item->update([
+            'image' => json_encode($itemImages), 
+        ]);
+
+        foreach($public_ids as $public_id){
+            Cloudinary::destroy($public_id);
+        }
+
+        $newData = Item::find($item->id);
+
+        return $newData;
     }
     
 }
