@@ -56,7 +56,7 @@
             <p>現在、在庫が不足している商品はありません。</p>
         @endif
     <p class="h2">更新ログ</p>
-        <div class="">
+        <div class="pb-4">
             @if(!empty($logs) && count($logs)>0)
             <div class="logs-area d-flex flex-column">
                 @foreach($logs as $log)

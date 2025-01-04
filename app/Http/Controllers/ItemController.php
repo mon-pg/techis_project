@@ -111,7 +111,7 @@ class ItemController extends Controller
                 $actions = [];
                 foreach($decoded_actions as $action){
                     if(isset($targets[$action])){
-                        $actions[] = $targets[$action];
+                        $actions[] = $targets[$action]; //$log->actionをaction名に変更して格納
                     }else{
                         continue;
                     }
@@ -135,7 +135,7 @@ class ItemController extends Controller
                     
                 $logItems[$log->id] =  Item::where('id', $log->target_id)->pluck('title', 'id');
             }
-           // dd($logUsers);
+                       
         return view('item.home', compact(
             'items',
             'types', 
