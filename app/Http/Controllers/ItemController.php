@@ -337,11 +337,27 @@ class ItemController extends Controller
                     'image' => json_encode($updateImage),
                 ]);
             }
+
+        // 古いリファラー情報をクリア
+            $request->session()->forget('previous_url');
             
             return redirect('/items');
         
     }
-    public function editView(Item $item){
+    public function editView(Item $item, Request $request){
+
+        // セッション情報
+        // 古いリファラー情報をクリア
+        if (!old()) { // バリデーションエラーではない場合のみクリア
+            $request->session()->forget('previous_url');
+        }
+
+        // 新しいリファラー情報をセッションに保存
+        $previousUrl = $request->headers->get('referer'); // 前のURLを取得
+        if ($previousUrl && !str_contains($previousUrl, '/items/' . $item->id)) {
+            $request->session()->put('previous_url', $previousUrl);
+        }
+
         $auth_user = Auth::user();
         $types = $this->type();
         $sales = $this->salesStatus();
