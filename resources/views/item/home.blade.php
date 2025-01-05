@@ -3,6 +3,11 @@
 @section('title', 'StockShelf')
 
 @section('content_header')
+    @if (session('alertMessage'))
+        <div class="alert alert-danger text-center mx-auto">
+            {{ session('alertMessage') }}
+        </div> 
+    @endif
 @stop
 
 @section('content')

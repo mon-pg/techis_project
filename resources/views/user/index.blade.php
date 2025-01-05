@@ -3,13 +3,18 @@
 @section('title', 'Stock Shelf')
 
 @section('content_header')
+    @if (session('alertMessage'))
+        <div class="alert alert-danger text-center mx-auto">
+            {{ session('alertMessage') }}
+        </div> 
+    @endif
     <h1>ユーザー管理一覧</h1>
 @stop
 
 @section('content')
 
-    @if(isset($searchError))
-        <p class="error-msg-search">{{ $searchError }}</p>
+    @if(session('selectError'))
+        <p class="error-msg-search">{{ session('selectError') }}</p>
     @endif
     @include('user.search')
 
