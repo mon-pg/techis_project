@@ -151,7 +151,7 @@
             </div>
 
             <h2>更新ログ</h2>
-            <div class="container">
+            <div class="pb-3">
                 @if(isset($logs) && count($logs)>0)
                 <div class="logs-area d-flex flex-column">
                     @foreach($logs as $log)

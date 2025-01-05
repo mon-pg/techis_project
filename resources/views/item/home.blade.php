@@ -65,7 +65,11 @@
                     <div class="flex-grow-1">
                         <p>
                             {{ $logUsers[$log->id] }}さんが、
-                            <a href="{{ url('/items/'.$log->target_id) }}">『{{ $logItems[$log->id][$log->target_id] }}』</a>
+                            @if($auth_user->role == 1||$auth_user->role == 2)
+                                <a href="{{ url('/items/'.$log->target_id) }}">『{{ $logItems[$log->id][$log->target_id] }}』</a>
+                            @elseif($auth_user->role == 3)                            
+                                <a href="{{ url('/items/detail/'.$log->target_id) }}">『{{ $logItems[$log->id][$log->target_id] }}』</a>
+                            @endif
                             の
                             {{ implode('・', $log->action) }}
                             を変更しました。

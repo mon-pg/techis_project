@@ -351,7 +351,6 @@ class ItemController extends Controller
         if (!old()) { // バリデーションエラーではない場合のみクリア
             $request->session()->forget('previous_url');
         }
-
         // 新しいリファラー情報をセッションに保存
         $previousUrl = $request->headers->get('referer'); // 前のURLを取得
         if ($previousUrl && !str_contains($previousUrl, '/items/' . $item->id)) {
@@ -393,7 +392,18 @@ class ItemController extends Controller
     /**
      * 商品詳細画面
      */
-    public function itemView(Item $item){
+    public function itemView(Request $request,Item $item){
+
+        // セッション情報
+        // 古いリファラー情報をクリア
+        $request->session()->forget('previous_url');
+
+        // 新しいリファラー情報をセッションに保存
+        $previousUrl = $request->headers->get('referer'); // 前のURLを取得
+        if ($previousUrl && !str_contains($previousUrl, '/items/detail/' . $item->id)) {
+            $request->session()->put('previous_url', $previousUrl);
+        }
+
         $auth_user = Auth::user();
         $types = $this->type();
         $sales = $this->salesStatus();
@@ -401,15 +411,32 @@ class ItemController extends Controller
         $logs = Log::where('target_type', 'Item')->where('target_id',$item->id)->orderBy('id', 'desc')->get();
         $logUsers = [];
             foreach($logs as $log){
-                $logUsers = User::where('id', $log->user_id)->first();
+                $decoded_actions = json_decode($log->action);
+                $actions = [];
+                foreach($decoded_actions as $action){
+                    if(isset($targets[$action])){
+                        $actions[] = $targets[$action];
+                    }else{
+                        continue;
+                    }
+                }
+                if($actions == null){
+                    $actions = ['商品情報'];
+                }
+                $log->action = $actions;
+            }
+            foreach($logs as $log){
+                $logUser = User::where('id', $log->user_id)->first();
 
-                if($logUsers && $logUsers->status === 1){
-                    $users[$log->id] =  $logUsers->name;
+                if($logUser && $logUser->status === 1){
+                    $logUsers[$log->id] =  $logUser->name;
                 }else {
-                    $users[$log->id] = 'ユーザー';
+                    $logUsers[$log->id] = 'ユーザー';
                 }
                 
             }
+        
+            //dd($logUsers);
   
         return view('item.detail', compact('item', 'auth_user', 'types', 'sales', 'logUsers', 'logs', 'targets'));
     }
