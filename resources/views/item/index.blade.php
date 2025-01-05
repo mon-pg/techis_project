@@ -2,7 +2,14 @@
 
 @section('title', 'StockShelf')
 
+    
+
 @section('content_header')
+    @if (session('alertMessage'))
+        <div class="alert alert-danger text-center mx-auto">
+            {{ session('alertMessage') }}
+        </div> 
+    @endif
     <h1 >商品管理一覧</h1>
 @stop
 
@@ -15,8 +22,6 @@
     @endif
     @include('item.search')  
 
-
-
     @if(isset($items) && count($items) > 0)
         <div class="row">
             <div class="col-12">
@@ -28,7 +33,7 @@
                             <p class="flex-grow-1"></p>
                         @endif
                         <p class="flex-grow-1"></p>
-                        @if($auth_user == 1| $auth_user == 2)
+                        @if($auth_user->role == 1| $auth_user->role == 2)
                             <a href="{{ url('items/add') }}" class="btn btn-primary">商品登録</a>
                         @else
                             <p class="flex-grow-1"></p>                            
@@ -54,8 +59,6 @@
                                     <th>販売状況</th>
                                     <th>在庫状況</th>
                                     <th>発売日</th>
-                                    
-                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -108,7 +111,7 @@
             <p>{{ $noItem }}</p>
         @else
             <p>表示できる商品がありません。</p>
-            @if($auth_user == 1 | $auth_user ==2)
+            @if($auth_user->role == 1 | $auth_user->role ==2)
             <p>商品登録は<a href="{{ url('items/add') }}">こちら</a>から。</p>
             @endif
         @endif

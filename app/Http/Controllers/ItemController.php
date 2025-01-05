@@ -251,7 +251,12 @@ class ItemController extends Controller
      */
     public function addView(){
         $auth_user = Auth::user();
-        return view('item.add',compact('auth_user'));
+        if($auth_user->role == 1 | $auth_user->role == 2){
+            return view('item.add',compact('auth_user'));
+        }else if($auth_user->role == 3){
+            return redirect('/items')->with('alertMessage', '商品登録の権限がありません。');
+        }
+        
     }
     /**
      * 商品登録
@@ -353,41 +358,53 @@ class ItemController extends Controller
         }
         // 新しいリファラー情報をセッションに保存
         $previousUrl = $request->headers->get('referer'); // 前のURLを取得
+        //dd($previousUrl);
         if ($previousUrl && !str_contains($previousUrl, '/items/' . $item->id)) {
             $request->session()->put('previous_url', $previousUrl);
         }
 
         $auth_user = Auth::user();
-        $types = $this->type();
-        $sales = $this->salesStatus();
-        $targets = $this->target('Item');
-        $logs = Log::where('target_type', 'Item')->where('target_id',$item->id)->orderBy('id', 'desc')->take(15)->get();
-            foreach($logs as $log){
-                $decoded_actions = json_decode($log->action);
-                $actions = [];
-                foreach($decoded_actions as $action){
-                    if(isset($targets[$action])){
-                        $actions[] = $targets[$action];
-                    }else{
-                        continue;
+        if($auth_user->role == 1 | $auth_user->role == 2){      
+
+            $types = $this->type();
+            $sales = $this->salesStatus();
+            $targets = $this->target('Item');
+            $logs = Log::where('target_type', 'Item')->where('target_id',$item->id)->orderBy('id', 'desc')->take(15)->get();
+                foreach($logs as $log){
+                    $decoded_actions = json_decode($log->action);
+                    $actions = [];
+                    foreach($decoded_actions as $action){
+                        if(isset($targets[$action])){
+                            $actions[] = $targets[$action];
+                        }else{
+                            continue;
+                        }
                     }
+                    if($actions == null){
+                        $actions = ['商品情報'];
+                    }
+                    $log->action = $actions;
                 }
-                if($actions == null){
-                    $actions = ['商品情報'];
+            $logUsers = [];
+            foreach($logs as $log){
+                $user = User::where('id', $log->user_id)->first();
+                if($user && $user->status === 1){
+                    $logUsers[$log->id] =  $user->name;
+                }else {
+                    $logUsers[$log->id] = 'ユーザー';
                 }
-                $log->action = $actions;
             }
-        $logUsers = [];
-        foreach($logs as $log){
-            $user = User::where('id', $log->user_id)->first();
-            if($user && $user->status === 1){
-                $logUsers[$log->id] =  $user->name;
-            }else {
-                $logUsers[$log->id] = 'ユーザー';
+    
+            return view('item.edit', compact('item', 'auth_user', 'types', 'sales', 'logUsers', 'logs', 'targets'));
+            
+        }else if($auth_user->role == 3){
+            
+            if($previousUrl == null){
+                $previousUrl = '/';
             }
+
+            return redirect($previousUrl)->with('alertMessage', '商品編集の権限がありません。（編集者・管理者の権限が必要です。）');
         }
-  
-        return view('item.edit', compact('item', 'auth_user', 'types', 'sales', 'logUsers', 'logs', 'targets'));
     }
     /**
      * 商品詳細画面
