@@ -24,12 +24,14 @@
                     <div class="card-header d-flex justify-content-between">
                         @if($auth_user->role == 1)
                             <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" > 一括削除 </a>                    
-                            <p class="flex-grow-1"></p>
-                            <a href="{{ url('items/add') }}" class="btn btn-primary">商品登録</a>
                         @else
                             <p class="flex-grow-1"></p>
-                            <p class="flex-grow-1"></p>
+                        @endif
+                        <p class="flex-grow-1"></p>
+                        @if($auth_user == 1| $auth_user == 2)
                             <a href="{{ url('items/add') }}" class="btn btn-primary">商品登録</a>
+                        @else
+                            <p class="flex-grow-1"></p>                            
                         @endif    
                     </div>
                     <div class="card-body table-responsive p-0">
@@ -106,7 +108,9 @@
             <p>{{ $noItem }}</p>
         @else
             <p>表示できる商品がありません。</p>
+            @if($auth_user == 1 | $auth_user ==2)
             <p>商品登録は<a href="{{ url('items/add') }}">こちら</a>から。</p>
+            @endif
         @endif
     @endif
 @stop
