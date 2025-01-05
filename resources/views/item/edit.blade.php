@@ -5,8 +5,8 @@
 @section('content_header')
 <div class="text-center">
     <div class="row">
-        <div class="col col-sm-auto"><!-- TODO:バリデーションかかったときどうする？homeから飛んだ時どうする？ -->
-            <a href="#" class="btn-back" onclick="history.back()">戻る</a>
+        <div class="col col-sm-auto">    
+                <a href="{{ session('previous_url', url('/items')) }}" class="btn-back">戻る</a>           
         </div>
         <h1 class="col-md-auto">商品編集</h1>
     </div>
@@ -151,7 +151,7 @@
             </div>
 
             <h2>更新ログ</h2>
-            <div class="container">
+            <div class="pb-3">
                 @if(isset($logs) && count($logs)>0)
                 <div class="logs-area d-flex flex-column">
                     @foreach($logs as $log)

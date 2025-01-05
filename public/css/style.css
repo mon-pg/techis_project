@@ -286,16 +286,24 @@ form p{
     margin: auto;
     padding: 0%;
  }
- .slick-images img{
-    height: 16rem;
-    max-width: 24rem;
-    margin: 0.5rem 1.5rem;
-    object-fit: cover;
-    border-radius: 10px;
-    background-color: #fff;
- }
  .slick-prev:before,
  .slick-next:before{
 	color: rgb(0, 0, 0) !important;
  }
-
+ .slick-detail-images {
+    text-align: center;
+    width: 90%;
+    margin: auto;
+    padding: 0%;
+ }
+ .slick-detail-images img{
+    height: 16rem;
+    max-width: 24rem;
+    margin: 0.5rem 1.5rem;
+    padding: 0.2rem;
+    object-fit: cover;
+    border-radius: 10px;
+    border: solid 1px #eeeeee;
+    background-color: #fff;
+ }
+ 

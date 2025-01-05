@@ -6,7 +6,7 @@
 <div class="text-center">
     <div class="row">
         <div class="col col-sm-auto"><!-- TODO:バリデーションかかったときどうする？homeから飛んだ時どうする？ -->
-            <a href="#" class="btn-back" onclick="history.back()">戻る</a>
+            <a href="{{ session('previous_url', url('/items')) }}" class="btn-back">戻る</a> 
         </div>
         <h1 class="col-md-auto">商品詳細</h1>
     </div>
@@ -58,7 +58,7 @@
                         @if($item->image != null)    
                             <div class="form-group-clm">
                                 <div class="stock-title"><label class="form-label" for="detail">商品画像：</label></div>
-                                <div class="slick-images">
+                                <div class="slick-detail-images">
                                     @foreach(json_decode($item->image, true) as $image)
                                     <div class="image-check">
                                         <img src="{{ $image['url'] }}" alt="商品画像" class="item-image">
@@ -76,7 +76,7 @@
             </div>
 
             <h2>更新ログ</h2>
-            <div class="container">
+            <div class="pb-3">
                 @if(isset($logs) && count($logs)>0)
                 <div class="logs-area d-flex flex-column">
                     @foreach($logs as $log)
@@ -117,7 +117,7 @@
 <!-- Slick用に初期化 -->
 <script>
 $(document).ready(function(){
-    $('.slick-images').slick({
+    $('.slick-detail-images').slick({
         dots: true,               // 下部にドットを表示
         infinite: false,           // 無限ループ
         speed: 300,               // アニメーション速度
