@@ -239,7 +239,12 @@ form p{
     text-align: center;
 }
 
-
+/* ソート機能 */
+th.sort-link a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
 /* ページネーション */
 .pagination {
     margin-bottom: 0 !important;

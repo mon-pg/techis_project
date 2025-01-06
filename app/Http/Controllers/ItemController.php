@@ -87,7 +87,7 @@ class ItemController extends Controller
     public function index()
     {
         // 商品一覧取得
-        $items = Item::paginate(10);
+        $items = Item::sortable()->paginate(10);
         $sales = $this->salesStatus();
         $types = $this->type();
         $auth_user = Auth::user();
@@ -166,7 +166,7 @@ class ItemController extends Controller
      * 商品検索機能
      */
     public function search(Request $request){
-        $items = Item::query();
+        $items = Item::sortable();
         $auth_user = Auth::user();
         $sales = $this->salesStatus();
         $types = $this->type();

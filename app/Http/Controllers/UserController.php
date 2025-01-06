@@ -75,7 +75,7 @@ class UserController extends Controller
      * ユーザー一覧
      */
     public function index() {
-        $users = User::where('status', 1)->paginate(10);
+        $users = User::sortable()->where('status', 1)->paginate(10);
         $auth_user = Auth::user();
         $roles = $this->roles();
         $departments = $this->departments();
@@ -86,7 +86,7 @@ class UserController extends Controller
      * ユーザー検索機能
      */
     public function search(Request $request){
-        $users = User::where('status', 1);  // アクティブユーザーを取得
+        $users = User::sortable()->where('status', 1);  // アクティブユーザーを取得
         $auth_user = Auth::user();
         $roles = $this->roles();
         $departments = $this->departments();
