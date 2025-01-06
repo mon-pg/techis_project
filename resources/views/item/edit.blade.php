@@ -14,6 +14,7 @@
 @stop
 
 @section('content')
+<div class="overlay-wrapper">
 <!-- modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true" >
     <form role="form" class="form-inline" method="post" action="">
@@ -54,7 +55,7 @@
             @endif
 
             <div class="card card-primary">
-                <form method="POST" enctype="multipart/form-data">
+                <form method="POST" id="itemForm" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
                         <div class="form-group-clm">
@@ -177,6 +178,10 @@
             
         </div>
     </div>
+    <div class="overlay" id="loadingOverlay" style="display: none;">
+        <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+    </div>
+</div>
 @stop
 
 @section('css')
@@ -188,6 +193,7 @@
 
 @section('js')
 <script src="{{ asset('js/edit.js') }}"></script>
+<script src="{{ asset('js/loading.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.min.js"></script>
 <!-- Slick用に初期化 -->
 <script>
@@ -203,5 +209,8 @@ $(document).ready(function(){
         arrows: true,             // 前後ボタンの表示
     });
 });
+</script>
+<script>
+    const redirectUrl = "{{ session('previous_url', url('/items')) }}";
 </script>
 @stop

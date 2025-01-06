@@ -14,6 +14,7 @@
 @stop
 
 @section('content')
+<div class="overlay-wrapper">
     <div class="row">
         <div class="col col-sm-auto"></div>
         <div class="col-md-10">
@@ -28,7 +29,7 @@
             @endif
 
             <div class="card card-primary">
-                <form method="POST" enctype="multipart/form-data">
+                <form method="POST" id="itemForm" enctype="multipart/form-data">
                     @csrf
                     <div class="card-body">
                         <div class="form-group-clm">
@@ -102,7 +103,14 @@
             </div>
         </div>
     </div>
+
+    <!-- ローディングオーバーレイ -->
+    <div class="overlay" id="loadingOverlay" style="display: none;">
+        <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+    </div>
+</div>
 @stop
+
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -110,4 +118,8 @@
 @stop
 
 @section('js')
+    <script src="{{ asset('js/loading.js') }}"></script>
+    <script>
+        const redirectUrl = "{{ url('/items') }}";
+    </script>
 @stop
