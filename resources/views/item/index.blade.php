@@ -53,12 +53,12 @@
                                         </div>
                                     </th>
                                     @endif
-                                    <th>ID</th>
+                                    <th class="sort-link">@sortablelink('id', 'ID')</th>
                                     <th>タイトル</th>
-                                    <th>ジャンル</th>
-                                    <th>販売状況</th>
+                                    <th class="sort-link">@sortablelink('type', 'ジャンル')</th>
+                                    <th class="sort-link">@sortablelink('salesStatus','販売状況')</th>
                                     <th>在庫状況</th>
-                                    <th>発売日</th>
+                                    <th class="sort-link">@sortablelink('salesDate', '発売日')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -100,7 +100,7 @@
                         </table>
                     </div>
                     <div class="card-footer">
-                    {{ $items->links('vendor.pagination.StockShelf') }}  
+                    {{ $items->appends(request()->query())->links('vendor.pagination.StockShelf') }}  
                     </div>
                 </div>
             </div>
@@ -121,6 +121,8 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <!-- sortable用 -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
 @stop
 
 @section('js')

@@ -46,11 +46,11 @@
                                         </div>
                                     </th>
                                     @endif
-                                    <th>ID</th>
+                                    <th class="sort-link">@sortablelink('id', 'ID')</th>
                                     <th>氏名</th>
-                                    <th>権限</th>
-                                    <th>部署</th>
-                                    <th>メールアドレス</th>
+                                    <th class="sort-link">@sortablelink('role', '権限')</th>
+                                    <th class="sort-link">@sortablelink('department', '部署')</th>
+                                    <th class="sort-link">@sortablelink('email', 'メールアドレス')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,7 +83,7 @@
                         </table>
                     </div>
                     <div class="card-footer">
-                    {{ $users->links('vendor.pagination.StockShelf') }}  
+                    {{ $users->appends(request()->query())->links('vendor.pagination.StockShelf') }}  
                     
                     </div>
                     
