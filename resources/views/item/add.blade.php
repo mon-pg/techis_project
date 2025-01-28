@@ -18,16 +18,10 @@
     <div class="row">
         <div class="col col-sm-auto"></div>
         <div class="col-md-10">
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                       @foreach ($errors->all() as $error)
-                          <li>{{ $error }}</li>
-                       @endforeach
-                    </ul>
-                </div>
-            @endif
-
+            <div class="alert alert-danger"  style="display: none;">
+                <ul>                        
+                </ul>
+            </div>
             <div class="card card-primary">
                 <form method="POST" id="itemForm" enctype="multipart/form-data">
                     @csrf
