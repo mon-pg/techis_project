@@ -2,7 +2,14 @@
 
 @section('title', 'StockShelf')
 
+    
+
 @section('content_header')
+    @if (session('alertMessage'))
+        <div class="alert alert-danger text-center mx-auto">
+            {{ session('alertMessage') }}
+        </div> 
+    @endif
     <h1 >商品管理一覧</h1>
 @stop
 
@@ -15,8 +22,6 @@
     @endif
     @include('item.search')  
 
-
-
     @if(isset($items) && count($items) > 0)
         <div class="row">
             <div class="col-12">
@@ -24,12 +29,14 @@
                     <div class="card-header d-flex justify-content-between">
                         @if($auth_user->role == 1)
                             <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" > 一括削除 </a>                    
-                            <p class="flex-grow-1"></p>
-                            <a href="{{ url('items/add') }}" class="btn btn-primary">商品登録</a>
                         @else
                             <p class="flex-grow-1"></p>
-                            <p class="flex-grow-1"></p>
+                        @endif
+                        <p class="flex-grow-1"></p>
+                        @if($auth_user->role == 1| $auth_user->role == 2)
                             <a href="{{ url('items/add') }}" class="btn btn-primary">商品登録</a>
+                        @else
+                            <p class="flex-grow-1"></p>                            
                         @endif    
                     </div>
                     <div class="card-body table-responsive p-0">
@@ -46,28 +53,26 @@
                                         </div>
                                     </th>
                                     @endif
-                                    <th>ID</th>
+                                    <th class="sort-link">@sortablelink('id', 'ID')</th>
                                     <th>タイトル</th>
-                                    <th>ジャンル</th>
-                                    <th>販売状況</th>
+                                    <th class="sort-link">@sortablelink('type', 'ジャンル')</th>
+                                    <th class="sort-link">@sortablelink('salesStatus','販売状況')</th>
                                     <th>在庫状況</th>
-                                    <th>発売日</th>
-                                    
-                                    
+                                    <th class="sort-link">@sortablelink('salesDate', '発売日')</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($items as $item)
                                     <tr>
                                         @if($auth_user->role == 1)
-                                        <td class="text-center"><input type="checkbox" class="delete-check select-item" name="delete-check[]" value="{{ $item->id }}"></td>
+                                        <td class=""><input type="checkbox" class="delete-check select-item" name="delete-check[]" value="{{ $item->id }}"></td>
                                         @endif
                                         <td>{{ $item->id }}</td>
                                         <td>
                                             @if($auth_user->role == 1||$auth_user->role == 2)
-                                            <a href="{{ url('/items/'.$item->id) }}">{{ $item->name }}</a>
+                                            <a href="{{ url('/items/'.$item->id) }}">{{ $item->title }}</a>
                                             @elseif($auth_user->role == 3)
-                                            <a href="{{ url('/items/detail/'.$item->id) }}">{{ $item->name }}</a>
+                                            <a href="{{ url('/items/detail/'.$item->id) }}">{{ $item->title }}</a>
                                             @endif
                                         </td>
                                         <td>{{ $types[$item->type] }}</td>
@@ -95,7 +100,7 @@
                         </table>
                     </div>
                     <div class="card-footer">
-                    {{ $items->links('vendor.pagination.StockShelf') }}  
+                    {{ $items->appends(request()->query())->links('vendor.pagination.StockShelf') }}  
                     </div>
                 </div>
             </div>
@@ -106,7 +111,9 @@
             <p>{{ $noItem }}</p>
         @else
             <p>表示できる商品がありません。</p>
+            @if($auth_user->role == 1 | $auth_user->role ==2)
             <p>商品登録は<a href="{{ url('items/add') }}">こちら</a>から。</p>
+            @endif
         @endif
     @endif
 @stop
@@ -114,6 +121,8 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    <!-- sortable用 -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
 @stop
 
 @section('js')

@@ -1,15 +1,20 @@
 @extends('adminlte::page')
 
-@section('title', 'ユーザー管理')
+@section('title', 'Stock Shelf')
 
 @section('content_header')
+    @if (session('alertMessage'))
+        <div class="alert alert-danger text-center mx-auto">
+            {{ session('alertMessage') }}
+        </div> 
+    @endif
     <h1>ユーザー管理一覧</h1>
 @stop
 
 @section('content')
 
-    @if(isset($searchError))
-        <p class="error-msg-search">{{ $searchError }}</p>
+    @if(session('selectError'))
+        <p class="error-msg-search">{{ session('selectError') }}</p>
     @endif
     @include('user.search')
 
@@ -41,11 +46,11 @@
                                         </div>
                                     </th>
                                     @endif
-                                    <th>ID</th>
-                                    <th>名前</th>
-                                    <th>権限</th>
-                                    <th>部署</th>
-                                    <th>メールアドレス</th>
+                                    <th class="sort-link">@sortablelink('id', 'ID')</th>
+                                    <th>氏名</th>
+                                    <th class="sort-link">@sortablelink('role', '権限')</th>
+                                    <th class="sort-link">@sortablelink('department', '部署')</th>
+                                    <th class="sort-link">@sortablelink('email', 'メールアドレス')</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -53,11 +58,11 @@
                                     <tr>
                                         
                                         @if($auth_user->role == 1||$auth_user->role == 2)
-                                        <td class="text-center"><input type="checkbox" class="user-check select-user" name="user-check[]" value="{{ $user->id }}"></td>         
+                                        <td><input type="checkbox" class="user-check select-user" name="user-check[]" value="{{ $user->id }}"></td>         
                                         @endif
                                         <td>{{ $user->id }}</td>
                                         <td>
-                                            @if($auth_user->role == 1||$auth_user->role == 2)
+                                            @if($auth_user->role == 1||$auth_user->role == 2 ||$auth_user->id == $user->id)
                                                 <a href="{{ url('/users/edit/'.$user->id) }}">{{ $user->name }}</a>
                                             @else
                                                 <p>{{ $user->name }}</p>
@@ -78,7 +83,7 @@
                         </table>
                     </div>
                     <div class="card-footer">
-                    {{ $users->links('vendor.pagination.StockShelf') }}  
+                    {{ $users->appends(request()->query())->links('vendor.pagination.StockShelf') }}  
                     
                     </div>
                     
@@ -89,7 +94,7 @@
         </div>
     @endif
     @if(isset($noUser))                    
-            <p>{{$noUser}}</p>
+            <h4 class="ms-2">{{$noUser}}</h4>
     @endif
 @stop
 

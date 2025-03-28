@@ -75,7 +75,7 @@ class UserController extends Controller
      * ユーザー一覧
      */
     public function index() {
-        $users = User::paginate(10);
+        $users = User::sortable()->where('status', 1)->paginate(10);
         $auth_user = Auth::user();
         $roles = $this->roles();
         $departments = $this->departments();
@@ -86,7 +86,7 @@ class UserController extends Controller
      * ユーザー検索機能
      */
     public function search(Request $request){
-        $users = User::query();
+        $users = User::sortable()->where('status', 1);  // アクティブユーザーを取得
         $auth_user = Auth::user();
         $roles = $this->roles();
         $departments = $this->departments();
@@ -100,7 +100,6 @@ class UserController extends Controller
             $users = $users->paginate(10);
             return view('user.index',compact('users', 'roles', 'departments', 'auth_user', 'searchError'));
         }else{
-
             if(!empty($sRole)){
                 $users->where('role', $sRole);
             }
@@ -135,24 +134,24 @@ class UserController extends Controller
      * 一括編集画面
      */
     public function someEdit(Request $request){
-        $ids = $request->input('user-check');
+        $auth_user = Auth::user();
+        if($auth_user->role == 3){
+            return redirect('/users')->with('alertMessage', 'ユーザー編集の権限がありません。（編集者・管理者の権限が必要です。）');
+        }else if($auth_user->role == 1 | $auth_user->role == 2){
+            $ids = $request->input('user-check');
 
-        if(empty($ids)){
-            $users = User::all();
+            if(empty($ids)){
+                $selectError = '※選択された項目がありません。';
+                return redirect('users')->with('selectError', $selectError);
+            }else{
+                
+            $users = User::whereIn('id', $ids)->get();
             $auth_user = Auth::user();
             $roles = $this->roles();
             $departments = $this->departments();
-            $selectError = '※選択された項目がありません。';
 
-        return view('user.index',compact('users', 'roles', 'departments', 'auth_user', 'selectError'));
-
-        }else{
-        $users = User::whereIn('id', $ids)->get();
-        $auth_user = Auth::user();
-        $roles = $this->roles();
-        $departments = $this->departments();
-
-        return view('user.someEdit',compact('users', 'roles', 'departments', 'auth_user'));
+            return view('user.someEdit',compact('users', 'roles', 'departments', 'auth_user'));
+            }
         }
     }
     /**
@@ -193,7 +192,7 @@ class UserController extends Controller
                 'id' => 'required',
                 'name' => 'required',
                 'role' => 'required',
-                'department' => 'nullable',
+                'department' => 'required',
                 'email' => 'required|email',
                 'memo' => 'max:50',
             ]);
@@ -205,25 +204,35 @@ class UserController extends Controller
             return redirect('/users');
         }
 
+        // GETリクエストのとき
         $auth_user = Auth::user();
-        $roles = $this->roles();
-        $departments = $this->departments();
-        $targets = $this->target('User');
-        $logs = Log::where('target_type', 'user')->where('target_id',$user->id)->get();
-            foreach($logs as $log){
-                $decoded_actions = json_decode($log->action);
-                $actions = [];
-                foreach($decoded_actions as $action){
-                    $actions[] = $targets[$action];
+        if(($auth_user->role == 1 | $auth_user->role == 2 | $auth_user->id == $user->id) && $user->status === 1){            
+            $roles = $this->roles();
+            $departments = $this->departments();
+            $targets = $this->target('User');
+            $logs = Log::where('target_type', 'user')->where('target_id',$user->id)->orderBy('id', 'desc')->take(15)->get();
+                foreach($logs as $log){
+                    $decoded_actions = json_decode($log->action);
+                    $actions = [];
+                    foreach($decoded_actions as $action){
+                        $actions[] = $targets[$action];
+                    }
+                    $log->action = $actions;
                 }
-                $log->action = $actions;
-            }
-        $logUsers = [];
+            $logUsers = [];
             foreach($logs as $log){
-                $logUsers[$log->id] =  User::where('id', $log->user_id)->pluck('name', 'id');
-            }
+                $logUser = User::where('id', $log->user_id)->first();
 
-        return view('user.edit',compact('user', 'roles', 'departments', 'targets', 'auth_user', 'logs', 'logUsers'));
+                if($logUser && $logUser->status === 1){
+                    $logUsers[$log->id] =  $logUser->name;
+                }else {
+                    $logUsers[$log->id] = 'ユーザー';
+                }
+            }
+            return view('user.edit',compact('user', 'roles', 'departments', 'targets', 'auth_user', 'logs', 'logUsers'));
+        }else {
+            return redirect('/users')->with('alertMessage', '該当ユーザーの編集権限がありません。（編集者・管理者の権限が必要です。）');
+        }
     }
     /**
      * ログの作成

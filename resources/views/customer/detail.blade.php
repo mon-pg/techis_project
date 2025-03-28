@@ -15,7 +15,10 @@
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/customer.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick-theme.css"/>
+
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
@@ -44,65 +47,57 @@
             </div>
         </nav>
 
-        <main class="py-4 w-100">
-        <div class="row">
-        <div class="container-sm col col-sm-auto"><!-- TODO:バリデーションかかったときどうする？homeから飛んだ時どうする？ -->
-            <a href="#" class="btn-back" onclick="history.back()">戻る</a>
-        </div>
-        <div class="col-md-10">
-        <h1>商品詳細</h1>
-            <div class="card card-primary">
-                
-                    <div class="card-body">
-                        
-                        <div class="form-group">
-                            <h2>{{ $item->name }}</h2>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="d-inline-flex">
-                                <label for="name">ジャンル：</label>
-                                <p>{{$types[$item->type]}}</p>
+        <main class="container d-flex flex-column align-items-center gap-2 mt-5">
+            <a href="#" class="btn-back align-self-start" onclick="history.back()">戻る</a>
+            <div class="card detail-card h-100 w-100" style="max-width: 800px;">
+                <div class="row">
+                        @if(empty($item->image))
+                            <div class="slick-images">
+                                <img src="{{ asset('img/noImage.jpg') }}" class="item-image" alt="商品紹介画像">
+                            </div>                        
+                        @else
+                            <div class="slick-images">
+                                @foreach(json_decode($item->image, true) as $image)
+                                <img src="{{ $image['url'] }}" alt="商品画像" class="item-image">
+                                @endforeach
                             </div>
+                        @endif
+                    </div>
+                <div class="row g-1 h-100">
+                    <div class="card-body d-flex flex-column h-100 detail-card-body">
+                        <h3 class="card-title detail-title">{{ $item->title }}</h3>
+                        <div class="item-info flex-grow-1 d-flex flex-column justify-content-between">
+                            <p class="card-text ">{{ $item->detail }}</p>
+                            <p class="card-text d-flex justify-content-between">
+                                <small class="text-body-secondary">{{ $item->salesDate->format('Y/m/d') }}発売</small>
+                                <small class="text-body-secondary">{{ $types[$item->type] }}</small>
+                            </p>
                         </div>
-                        <div class="form-group">
-                            <div class="d-inline-flex">
-                                <label for="name">販売状況：</label>
-                                <p>{{$sales[$item->salesStatus]}}</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="d-inline-flex">
-                                <label for="name">発売日：</label>
-                                <p>{{$item->salesDate ? $item->salesDate->format('Y/m/d') : '未定'}}</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="d-flex flex-column">
-                                <label for="name">商品紹介：</label>
-                                <p>{{$item->detail}}</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="d-inline-flex">
-                                <label for="name">在庫状況：</label>
-                                @if($item->stock > $item->sdStock)
-                                    <p>在庫あり〇</p>
-                                @elseif($item->stock === 0)
-                                    <p>在庫なし✕</p>
-                                @else
-                                    <p>残りわずか△</p>
-                                @endif
-                            </div>
-                        </div>
-                            
-                            
                     </div>
                 </div>
             </div>
-        </div>
         </main>
     </div>
-    
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel/slick/slick.min.js"></script>
+<!-- Slick用に初期化 -->
+<script>
+$(document).ready(function(){
+    $('.slick-images').slick({
+        dots: true,               // 下部にドットを表示
+        infinite: true,           // 無限ループ
+        speed: 500,               // アニメーション速度
+        slidesToShow: 1,          // 表示するスライド数
+        slidesToScroll: 1,        // スクロールするスライド数
+        autoplay: true,           // 自動再生
+        autoplaySpeed: 4000,      // 自動再生の間隔 (ms)
+        arrows: true,             // 前後ボタンの表示
+        centerMode: true,
+        variableWidth: true,  
+    });
+});
+</script>
 </body>
 </html>

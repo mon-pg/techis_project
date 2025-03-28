@@ -3,6 +3,11 @@
 @section('title', 'StockShelf')
 
 @section('content_header')
+    @if (session('alertMessage'))
+        <div class="alert alert-danger text-center mx-auto">
+            {{ session('alertMessage') }}
+        </div> 
+    @endif
 @stop
 
 @section('content')
@@ -31,9 +36,9 @@
                                                 
                                                 <td>
                                                     @if($auth_user->role == 1||$auth_user->role == 2)
-                                                    <a href="{{ url('/items/'.$item->id) }}">{{ $item->name }}</a>
+                                                    <a href="{{ url('/items/'.$item->id) }}">{{ $item->title }}</a>
                                                     @elseif($auth_user->role == 3)
-                                                    <a href="{{ url('/items/detail/'.$item->id) }}">{{ $item->name }}</a>
+                                                    <a href="{{ url('/items/detail/'.$item->id) }}">{{ $item->title }}</a>
                                                     @endif
                                                 </td>
                                                 <td>{{ $types[$item->type] }}</td>
@@ -56,16 +61,20 @@
             <p>現在、在庫が不足している商品はありません。</p>
         @endif
     <p class="h2">更新ログ</p>
-        <div class="">
-            @if(isset($logs) && count($logs)>0)
-            <div class="d-flex flex-column">
+        <div class="pb-4">
+            @if(!empty($logs) && count($logs)>0)
+            <div class="logs-area d-flex flex-column">
                 @foreach($logs as $log)
                 <div class="d-flex flex-wrap gap-2 log-area">
                     <div class="align-self-start">{{ $log->created_at->format('Y/m/d') }}</div>
                     <div class="flex-grow-1">
                         <p>
-                            {{ $logUsers[$log->id][$log->user_id] }}さんが、
-                            <a href="{{ url('/items/'.$log->target_id) }}">『{{ $logItems[$log->id][$log->target_id] }}』</a>
+                            {{ $logUsers[$log->id] }}さんが、
+                            @if($auth_user->role == 1||$auth_user->role == 2)
+                                <a href="{{ url('/items/'.$log->target_id) }}">『{{ $logItems[$log->id][$log->target_id] }}』</a>
+                            @elseif($auth_user->role == 3)                            
+                                <a href="{{ url('/items/detail/'.$log->target_id) }}">『{{ $logItems[$log->id][$log->target_id] }}』</a>
+                            @endif
                             の
                             {{ implode('・', $log->action) }}
                             を変更しました。

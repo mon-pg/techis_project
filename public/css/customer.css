@@ -1,23 +1,3 @@
-/* タイトル名のaタグ */
-td a{
-    color: rgb(119, 119, 194);
-    font-weight: bold;
-}
-
-
-/* 登録・更新フォーム */
-.validation-mark{
-    color: red ;
-}
-.detail-area{
-    border: 1px solid #ddd;
-    padding: 8px;
-    max-width: 200px; /* 最大幅を設定 */
-    white-space: nowrap; /* テキストを折り返さない */
-    overflow: hidden; /* はみ出たテキストを隠す */
-    text-overflow: ellipsis; /* はみ出た部分に省略記号を表示 */
-}
-
 /* 戻るボタン */
 .btn-back {
     width: fit-content;
@@ -33,20 +13,27 @@ td a{
 	background: #7a7a7a;
 	color: #fff;
 }
+
 .card-area a {
   text-decoration: none;  
 }
-.card {
+.items-card {
     width: 18rem;
     cursor: pointer;
 }
-.card-body{
+.card-img-top{
+    width: 18rem;
+    height: 18rem;
+    object-fit: cover;
+
+}
+.items-card-body{
     background-color: #fff;
     height: 110px;
     overflow: hidden;
     position: relative;
 }
-.card-body::before{
+.items-card-body::before{
     position: absolute;
     bottom: 0px;
     display: block;
@@ -55,10 +42,10 @@ td a{
     width: 100%;
     background: linear-gradient( rgba(255, 255, 255, 0) 0%, #ffffff 95%, #ffffff 100%);
 }
-.card-title {
+.items-card-title {
     font-weight: bold;
 }
-.card:hover .card-title {
+.items-card:hover .items-card-title {
     color: rgb(51, 111, 202); /* 青色に変更 */
     transition: color 0.3s ease; /* なめらかな色の変化 */
 }
@@ -71,6 +58,7 @@ td a{
     flex-direction: column;
     justify-content: center;
 }
+
 /* 検索窓 */
 .error-msg-search{
     color: rgb(251, 48, 48);
@@ -111,3 +99,38 @@ td a{
 .pagination {
     margin-bottom: 0 !important;
 }
+
+
+
+/* 商品詳細画面 */
+.detail-card{
+    border: none !important;
+}
+.detail-card-body{
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+.detail-title {
+    font-weight: bold;
+}
+
+/*
+ * Slick用
+ */
+ .slick-images {
+    text-align: center;
+    width: 80%;
+    padding: 0;
+ }
+ .slick-images img{
+    height: 20rem;
+    max-width: 30rem;
+    margin: 0.5rem 1.5rem;
+    object-fit: cover;
+    border-radius: 10px;
+ }
+ .slick-prev:before,
+ .slick-next:before{
+	color: rgb(0, 0, 0) !important;
+ }
+

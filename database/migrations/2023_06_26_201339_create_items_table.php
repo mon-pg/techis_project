@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('stock')->comment('在庫数');
             $table->integer('sdStock')->default(5)->comment('基準在庫');
             $table->text('detail')->nullable()->comment('商品紹介');
+            $table->json('image')->nullable()->comment('商品画像');
             $table->timestamps();
         
             // 外部キー制約を追加

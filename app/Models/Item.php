@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Kyslik\ColumnSortable\Sortable;
 
 class Item extends Model
 {
+    use Sortable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -13,13 +16,22 @@ class Item extends Model
      */
     protected $fillable = [
         'user_id',
-        'name',
+        'title',
         'type',
         'salesStatus',
         'salesDate',
         'stock',
         'sdStock',
         'detail',
+        'image',
+    ];
+    public $sortable = [
+        'id',
+        'salesDate',
+        'salesStatus',
+        'stock',
+        'type',
+
     ];
 
     /**
