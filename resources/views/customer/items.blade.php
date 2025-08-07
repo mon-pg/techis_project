@@ -59,11 +59,11 @@
                 @foreach($items as $item)
                
                     <a class="card items-card" href="{{ url('/view/items/detail/'.$item->id) }}">
-                        @if(empty($item->image))
-                            <img src="{{asset('img/noImage.jpg')}}" class="card-img-top" alt="商品画像">
-                        @else
-                            <img src="{{ json_decode($item->image, true)[0]['url'] }}" class="card-img-top" alt="商品画像">
-                        @endif
+                    @if(empty($item->image) || empty(json_decode($item->image, true)) || empty(json_decode($item->image, true)[0]['url']))
+                        <img src="{{ asset('img/noImage.jpg') }}" class="card-img-top" alt="商品画像">
+                    @else
+                        <img src="{{ json_decode($item->image, true)[0]['url'] }}" class="card-img-top" alt="商品画像">
+                    @endif
                         <div class="card-body items-card-body">
                             <h5 class="card-title items-card-title">{{ $item->title }}</h5>
                             <p class="card-text items-card-text">{{ $item->detail }}</p>
